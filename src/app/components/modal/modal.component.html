@@ -1,0 +1,20 @@
+<div class="modal" (click)="close.emit()">
+  <div class="modal__panel" (click)="$event.stopPropagation()">
+    <div class="modal__head">
+      @if (title()) {
+        <h3 class="modal__title">{{ title() }}</h3>
+      }
+      <button
+        type="button"
+        class="modal__close"
+        aria-label="Закрыть"
+        (click)="close.emit()"
+      >
+        ✕
+      </button>
+    </div>
+    <div class="modal__body">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+@if (geometry(); as g) {
+  <div class="chart">
+    <div class="chart__legend">
+      <span class="chart__legend-item">
+        <i class="chart__dot chart__dot--ctl"></i>CTL · фитнес
+      </span>
+      <span class="chart__legend-item">
+        <i class="chart__dot chart__dot--atl"></i>ATL · усталость
+      </span>
+    </div>
+
+    <svg
+      class="chart__svg"
+      [attr.viewBox]="'0 0 ' + g.width + ' ' + g.height"
+    >
+      <defs>
+        <linearGradient id="ctlGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop class="chart__grad-top" offset="0" />
+          <stop class="chart__grad-bottom" offset="1" />
+        </linearGradient>
+      </defs>
+
+      @for (gl of g.gridLines; track $index) {
+        <line
+          class="chart__grid"
+          x1="0"
+          [attr.y1]="gl.y"
+          [attr.x2]="g.width"
+          [attr.y2]="gl.y"
+        />
+      }
+
+      <path class="chart__area" [attr.d]="g.ctlArea" />
+      <path class="chart__line chart__line--atl" [attr.d]="g.atlLine" />
+      <path class="chart__line chart__line--ctl" [attr.d]="g.ctlLine" />
+
+      <circle
+        class="chart__end chart__end--atl"
+        [attr.cx]="g.atlEnd.x"
+        [attr.cy]="g.atlEnd.y"
+        r="3.5"
+      />
+      <circle
+        class="chart__end chart__end--ctl"
+        [attr.cx]="g.ctlEnd.x"
+        [attr.cy]="g.ctlEnd.y"
+        r="3.5"
+      />
+    </svg>
+
+    <div class="chart__axis">
+      <span>{{ g.startLabel }}</span>
+      <span>{{ g.endLabel }}</span>
+    </div>
+  </div>
+} @else {
+  <div class="chart chart--empty">
+    Недостаточно данных для графика — импортируй историю тренировок.
+  </div>
+}

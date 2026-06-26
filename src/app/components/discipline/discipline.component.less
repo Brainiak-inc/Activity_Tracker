@@ -1,0 +1,32 @@
+:host {
+  display: block;
+}
+
+.discipline {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+  }
+
+  &__heading {
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+
+  &__empty {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}

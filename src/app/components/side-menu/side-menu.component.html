@@ -1,0 +1,39 @@
+<div class="side-menu">
+  <header class="side-menu__head">
+    <h2 class="side-menu__title">Календарь дисциплины</h2>
+    <button
+      type="button"
+      class="side-menu__close"
+      aria-label="Закрыть меню"
+      (click)="close.emit()"
+    >
+      ✕
+    </button>
+  </header>
+
+  <div class="side-menu__selector">
+    @for (t of tracks; track t.key) {
+      <button
+        type="button"
+        class="side-menu__track"
+        [class.side-menu__track--active]="track() === t.key"
+        (click)="track.set(t.key)"
+      >
+        {{ t.label }}
+      </button>
+    }
+  </div>
+
+  <div class="side-menu__body">
+    <app-calendar [track]="track()" />
+
+    <div class="side-menu__legend">
+      <span class="side-menu__legend-item"><i class="side-menu__chip side-menu__chip--full"></i>выполнено</span>
+      <span class="side-menu__legend-item"><i class="side-menu__chip side-menu__chip--partial"></i>частично</span>
+      <span class="side-menu__legend-item"><i class="side-menu__chip side-menu__chip--missed"></i>пропущено</span>
+    </div>
+
+    <h3 class="side-menu__subtitle">Данные</h3>
+    <app-data-controls />
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<div class="activity-list">
+  @for (activity of activities(); track activity.start.getTime() + activity.garminType) {
+    <div class="activity-list__item">
+      @if (showEmoji()) {
+        <div class="activity-list__emoji">{{ emoji(activity) }}</div>
+      }
+      <div class="activity-list__body">
+        <div class="activity-list__title">{{ activity.title }}</div>
+        <div class="activity-list__meta">{{ subtitle(activity) }}</div>
+      </div>
+    </div>
+  } @empty {
+    <div class="activity-list__empty">Нет тренировок</div>
+  }
+</div>

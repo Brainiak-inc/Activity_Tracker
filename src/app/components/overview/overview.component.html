@@ -1,0 +1,32 @@
+@if (form(); as f) {
+  <div class="overview">
+    <div class="overview__cards">
+      <app-metric-card label="Фитнес · CTL" [value]="round(f.ctl)" accent="var(--accent)" />
+      <app-metric-card label="Усталость · ATL" [value]="round(f.atl)" accent="var(--fatigue)" />
+      <app-metric-card
+        label="Форма · TSB"
+        [value]="round(f.tsb)"
+        [accent]="tsb()!.color"
+        [sub]="tsb()!.label"
+      />
+    </div>
+
+    <h2 class="overview__heading">Динамика формы</h2>
+    <app-fitness-chart [series]="series()" />
+
+    <h2 class="overview__heading">Дисциплины</h2>
+    <div class="overview__disciplines">
+      @for (d of disciplines(); track d.key) {
+        <div class="discipline-mini">
+          <div class="discipline-mini__emoji">{{ d.emoji }}</div>
+          <div class="discipline-mini__label">{{ d.label }}</div>
+          <div class="discipline-mini__count">{{ d.count }}</div>
+          <div class="discipline-mini__ctl">CTL {{ d.ctl }}</div>
+        </div>
+      }
+    </div>
+
+    <h2 class="overview__heading">Последние тренировки</h2>
+    <app-activity-list [activities]="recent()" />
+  </div>
+}

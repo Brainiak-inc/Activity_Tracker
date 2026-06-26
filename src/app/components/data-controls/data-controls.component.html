@@ -1,0 +1,46 @@
+<div class="data-controls">
+  <button type="button" class="data-controls__btn" (click)="exportData()">
+    Экспорт данных
+  </button>
+  <label class="data-controls__btn">
+    <input
+      type="file"
+      accept=".json,application/json"
+      hidden
+      (change)="onImport($event)"
+    />
+    Импорт данных
+  </label>
+  <button
+    type="button"
+    class="data-controls__btn data-controls__btn--danger"
+    (click)="askDelete()"
+  >
+    Удалить все данные
+  </button>
+</div>
+
+@if (confirmOpen()) {
+  <app-modal title="Удалить все данные?" (close)="cancelDelete()">
+    <p class="confirm__text">
+      Будут удалены все тренировки, настройки и отметки календаря. Действие
+      необратимо.
+    </p>
+    <div class="confirm__actions">
+      <button
+        type="button"
+        class="confirm__btn confirm__btn--ghost"
+        (click)="cancelDelete()"
+      >
+        Отмена
+      </button>
+      <button
+        type="button"
+        class="confirm__btn confirm__btn--danger"
+        (click)="confirmDelete()"
+      >
+        Удалить
+      </button>
+    </div>
+  </app-modal>
+}

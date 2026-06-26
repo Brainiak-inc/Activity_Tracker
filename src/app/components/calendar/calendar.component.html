@@ -1,0 +1,97 @@
+<div class="calendar">
+  <div class="calendar__head">
+    <div class="calendar__gutter"></div>
+    @for (day of weekdays; track day) {
+      <div class="calendar__weekday">{{ day }}</div>
+    }
+  </div>
+
+  <div class="calendar__grid">
+    @for (week of weeks; track $index) {
+      <div class="calendar__week">
+        <div class="calendar__month">{{ week.monthLabel }}</div>
+        @for (cell of week.cells; track cell.key) {
+          @if (cell.inYear) {
+            <button
+              type="button"
+              class="calendar__day"
+              [class.calendar__day--full]="statusOf(cell.key) === 'full'"
+              [class.calendar__day--partial]="statusOf(cell.key) === 'partial'"
+              [class.calendar__day--missed]="statusOf(cell.key) === 'missed'"
+              [class.calendar__day--today]="cell.isToday"
+              [id]="cell.isToday ? 'cal-today' : null"
+              [title]="commentOf(cell.key)"
+              (click)="open(cell)"
+            >
+              <span class="calendar__num">{{ cell.date.getDate() }}</span>
+              @if (cell.isToday) {
+                <span class="calendar__today">today</span>
+              }
+            </button>
+          } @else {
+            <div class="calendar__day calendar__day--empty"></div>
+          }
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@if (selected(); as cell) {
+  <app-modal [title]="selectedLabel()" (close)="close()">
+    <div class="day-edit">
+      <div class="day-edit__options">
+        <button
+          type="button"
+          class="day-edit__opt day-edit__opt--full"
+          [class.day-edit__opt--active]="draftStatus() === 'full'"
+          (click)="pick('full')"
+        >
+          Выполнено
+        </button>
+        <button
+          type="button"
+          class="day-edit__opt day-edit__opt--partial"
+          [class.day-edit__opt--active]="draftStatus() === 'partial'"
+          (click)="pick('partial')"
+        >
+          Частично
+        </button>
+        <button
+          type="button"
+          class="day-edit__opt day-edit__opt--missed"
+          [class.day-edit__opt--active]="draftStatus() === 'missed'"
+          (click)="pick('missed')"
+        >
+          Пропущено
+        </button>
+      </div>
+
+      <textarea
+        class="day-edit__comment"
+        rows="3"
+        placeholder="Комментарий…"
+        [value]="draftComment()"
+        (input)="onComment($event)"
+      ></textarea>
+
+      <div class="day-edit__actions">
+        <button
+          type="button"
+          class="day-edit__btn day-edit__btn--ghost"
+          (click)="clear()"
+        >
+          Очистить
+        </button>
+        <button
+          type="button"
+          class="day-edit__btn day-edit__btn--primary"
+          [disabled]="!draftStatus()"
+          (click)="save()"
+        >
+          Сохранить
+        </button>
+      </div>
+    </div>
+  </app-modal>
+}

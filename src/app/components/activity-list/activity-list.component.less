@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.activity-list {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px 16px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 0;
+
+    & + & {
+      border-top: 1px solid var(--border);
+    }
+  }
+
+  &__emoji {
+    font-size: 22px;
+    width: 30px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  &__body {
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__title {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  &__empty {
+    padding: 24px 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+}

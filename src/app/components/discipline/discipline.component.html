@@ -1,0 +1,37 @@
+@if (totals().count === 0) {
+  <div class="discipline__empty">
+    Пока нет тренировок по этой дисциплине.<br />
+    Они появятся здесь после импорта соответствующих активностей.
+  </div>
+} @else {
+  <div class="discipline">
+    <div class="discipline__cards">
+      <app-metric-card label="Тренировок" [value]="totals().count.toString()" />
+      <app-metric-card
+        label="Дистанция"
+        [value]="round(totals().distanceKm)"
+        unit="км"
+      />
+      <app-metric-card label="Время" [value]="durationText()" />
+    </div>
+
+    @if (form(); as f) {
+      <div class="discipline__cards">
+        <app-metric-card label="Фитнес · CTL" [value]="round(f.ctl)" accent="var(--accent)" />
+        <app-metric-card label="Усталость · ATL" [value]="round(f.atl)" accent="var(--fatigue)" />
+        <app-metric-card
+          label="Форма · TSB"
+          [value]="round(f.tsb)"
+          [accent]="tsb()!.color"
+          [sub]="tsb()!.label"
+        />
+      </div>
+    }
+
+    <h2 class="discipline__heading">Динамика формы</h2>
+    <app-fitness-chart [series]="series()" />
+
+    <h2 class="discipline__heading">Все тренировки</h2>
+    <app-activity-list [activities]="activities()" [showEmoji]="false" />
+  </div>
+}

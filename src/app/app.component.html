@@ -1,0 +1,67 @@
+<div class="app">
+  <header class="app__header">
+    <div class="app__left">
+      <button
+        type="button"
+        class="app__burger"
+        aria-label="Открыть меню"
+        (click)="menuOpen.set(true)"
+      >
+        ☰
+      </button>
+      <div class="app__brand">
+        <span class="app__title">Ironman Tracker</span>
+      </div>
+    </div>
+    <label class="app__import">
+      <input type="file" accept=".csv" hidden (change)="onFile($event)" />
+      <span class="app__import-btn">Импорт CSV</span>
+    </label>
+  </header>
+
+  @if (service.hasData()) {
+    <nav class="tabs">
+      @for (t of tabs; track t.key) {
+        <button
+          class="tabs__tab"
+          [class.tabs__tab--active]="activeTab() === t.key"
+          (click)="activeTab.set(t.key)"
+        >
+          <span class="tabs__emoji">{{ t.emoji }}</span>
+          <span class="tabs__label">{{ t.label }}</span>
+        </button>
+      }
+    </nav>
+
+    <main class="app__content">
+      @if (isOverview(activeTab())) {
+        <app-overview />
+      } @else {
+        <app-discipline [discipline]="asDiscipline(activeTab())" />
+      }
+    </main>
+  } @else {
+    <div class="empty">
+      <h2 class="empty__title">Импортируй данные из Garmin</h2>
+      <p class="empty__text">
+        Garmin Connect → Activities → Export CSV, затем загрузи файл сюда —
+        построим аналитику.
+      </p>
+      <label class="empty__btn">
+        <input type="file" accept=".csv" hidden (change)="onFile($event)" />
+        Выбрать CSV-файл
+      </label>
+    </div>
+  }
+
+  @if (toast(); as t) {
+    <div class="toast">{{ t }}</div>
+  }
+</div>
+
+@if (menuOpen()) {
+  <div class="scrim" (click)="menuOpen.set(false)"></div>
+  <aside class="drawer">
+    <app-side-menu (close)="menuOpen.set(false)" />
+  </aside>
+}
