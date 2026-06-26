@@ -1,59 +1,64 @@
-# ActivityTrackerWeb
+# Ironman Tracker
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.12.
+🔗 **Live demo:** https://brainiak-inc.github.io/Activity_Tracker/
 
-## Development server
+A web app for tracking Ironman training. It imports workouts from Garmin Connect (CSV) and builds progress analytics using the fitness–fatigue model — overall and per discipline (run, bike, swim). It also includes a discipline calendar where you manually log how well you stuck to your plan.
 
-To start a local development server, run:
+No backend: all data is stored locally in the browser.
 
-```bash
-ng serve
-```
+## Features
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Import of Garmin Connect CSV exports (Activities → Export CSV)
+- Form metrics: **CTL** (fitness), **ATL** (fatigue), **TSB** (freshness) — overall and per discipline
+- Form trend chart
+- Discipline tabs: 🏊 swim · 🚴 bike · 🏃 run
+- Plan-adherence calendar (a year laid out by weeks): mark days as done / partial / missed, with comments
+- Export and import of all data as a single JSON file — to move between devices
 
-## Code scaffolding
+## How to use
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. In Garmin Connect: **Activities → Export CSV** (scroll the list to load the period you need).
+2. In the app, click **Import CSV** and pick the file.
+3. The analytics build automatically; switch between discipline tabs.
+4. The burger menu on the left holds the discipline calendar and the export / import / delete controls.
 
-```bash
-ng generate component component-name
-```
+Re-importing a CSV only adds new workouts (duplicates are skipped) and never touches the calendar.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Analytics
 
-```bash
-ng generate --help
-```
+Garmin doesn't include TSS in the CSV, so training load is computed from heart rate:
 
-## Building
+- **hrTSS** = `hours × (avg HR / threshold)² × 100`
+- **CTL** — 42-day exponential average of load (fitness)
+- **ATL** — 7-day average (fatigue)
+- **TSB** = CTL − ATL (form)
 
-To build the project run:
+The threshold heart rate (LTHR) is estimated automatically from your runs.
 
-```bash
-ng build
-```
+## Stack
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- Angular 19 — standalone components, signals
+- LESS + BEM
+- `localStorage` for persistence
+- Custom SVG chart and CSV parser — no third-party libraries
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## Running locally
 
 ```bash
-ng e2e
+npm install
+npm start          # http://localhost:4200
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Build:
 
-## Additional Resources
+```bash
+npm run build
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Deployment
+
+GitHub Pages via `angular-cli-ghpages`:
+
+```bash
+ng deploy --base-href=/Activity_Tracker/
+```
