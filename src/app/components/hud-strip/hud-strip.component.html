@@ -1,0 +1,25 @@
+<div class="hud">
+  <div class="hud__tile">
+    <span class="hud__label">Форма</span>
+    <span class="hud__value" [style.color]="status()?.color ?? 'var(--text)'">
+      {{ round(tsb()) }}
+    </span>
+    @if (status(); as s) {
+      <span class="hud__sub" [style.color]="s.color">{{ s.label }}</span>
+    }
+  </div>
+
+  <div class="hud__tile">
+    <span class="hud__label">Фитнес · CTL</span>
+    <span class="hud__value hud__value--accent">{{ round(ctl()) }}</span>
+    @if (trend(); as t) {
+      <span class="hud__sub">{{ t.arrow }} {{ t.delta }} · 7д</span>
+    }
+  </div>
+
+  <div class="hud__tile">
+    <span class="hud__label">Нагрузка · 7д</span>
+    <span class="hud__value">{{ round(weekly()) }}</span>
+    <span class="hud__sub">TSS</span>
+  </div>
+</div>

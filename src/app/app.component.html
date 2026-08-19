@@ -20,6 +20,8 @@
   </header>
 
   @if (service.hasData()) {
+    <app-hud-strip class="app__hud" />
+
     <nav class="tabs">
       @for (t of tabs; track t.key) {
         <button
@@ -28,6 +30,7 @@
           (click)="activeTab.set(t.key)"
         >
           <span class="tabs__emoji">{{ t.emoji }}</span>
+          <span class="tabs__count">{{ tabCount(t.key) }}</span>
           <span class="tabs__label">{{ t.label }}</span>
         </button>
       }

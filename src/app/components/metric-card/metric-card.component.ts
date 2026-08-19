@@ -11,5 +11,6 @@ export class MetricCardComponent {
   value = input.required<string>();
   unit = input<string>();
   sub = input<string>();
+  hint = input<string>();
   accent = input<string>('var(--text)');
 }

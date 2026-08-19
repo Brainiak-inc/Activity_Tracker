@@ -1,5 +1,13 @@
 <div class="metric-card">
-  <div class="metric-card__label">{{ label() }}</div>
+  <div class="metric-card__label">
+    <span class="metric-card__label-text">{{ label() }}</span>
+    @if (hint()) {
+      <span class="metric-card__info" tabindex="0">
+        i
+        <span class="metric-card__tip" role="tooltip">{{ hint() }}</span>
+      </span>
+    }
+  </div>
   <div class="metric-card__value" [style.color]="accent()">
     {{ value() }}@if (unit()) {<span class="metric-card__unit">{{ unit() }}</span>}
   </div>

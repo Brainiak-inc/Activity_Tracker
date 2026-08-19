@@ -58,11 +58,12 @@
   &__import-btn {
     display: inline-block;
     background: var(--accent);
-    color: #0a0b0d;
+    color: #04121a;
     font-weight: 700;
     font-size: 13px;
     padding: 9px 16px;
     border-radius: 999px;
+    box-shadow: 0 0 16px -4px var(--accent-glow);
   }
 
   &__content {
@@ -70,38 +71,56 @@
   }
 }
 
+.app__hud {
+  display: block;
+  margin-bottom: 14px;
+}
+
 .tabs {
   display: flex;
-  gap: 4px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 4px;
+  gap: 6px;
   margin-bottom: 18px;
 
   &__tab {
     flex: 1;
-    display: inline-flex;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 7px;
-    border: none;
-    background: transparent;
+    gap: 3px;
+    border: 1px solid var(--border);
+    background: var(--surface);
     color: var(--text-muted);
-    padding: 9px 8px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
-    transition: background 0.15s, color 0.15s;
+    padding: 8px 4px;
+    border-radius: var(--radius-sm);
+    transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
 
     &--active {
-      background: var(--surface-2);
-      color: var(--text);
+      color: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 14px -6px var(--accent-glow);
     }
   }
 
   &__emoji {
-    font-size: 15px;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  &__count {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__label {
+    font-size: 11px;
+    font-weight: 600;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -130,11 +149,12 @@
   &__btn {
     margin-top: 8px;
     background: var(--accent);
-    color: #0a0b0d;
+    color: #04121a;
     font-weight: 700;
     padding: 11px 20px;
     border-radius: 999px;
     cursor: pointer;
+    box-shadow: 0 0 18px -4px var(--accent-glow);
   }
 }
 

@@ -1,7 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { Discipline } from '../../domain/discipline';
 import { tsbStatus } from '../../domain/form-status';
-import { formatDuration } from '../../domain/format';
+import { formatDistance, formatDuration } from '../../domain/format';
 import { DashboardService } from '../../services/dashboard.service';
 import { ActivityListComponent } from '../activity-list/activity-list.component';
 import { FitnessChartComponent } from '../fitness-chart/fitness-chart.component';
@@ -33,6 +33,10 @@ export class DisciplineComponent {
 
   readonly durationText = computed(() =>
     formatDuration(this.totals().durationMs),
+  );
+
+  readonly distanceText = computed(() =>
+    formatDistance(this.discipline(), this.totals().distanceKm),
   );
 
   round(v: number): string {
