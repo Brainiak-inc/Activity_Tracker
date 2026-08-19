@@ -1,0 +1,44 @@
+<app-modal title="Новый план" (close)="cancel.emit()">
+  <div class="form">
+    <input
+      class="form__input"
+      placeholder="Название плана"
+      [value]="name()"
+      (input)="onName($event)"
+    />
+
+    <label class="form__check">
+      <input type="checkbox" [checked]="dated()" (change)="toggleDated($event)" />
+      <span>Привязать к датам</span>
+    </label>
+
+    @if (dated()) {
+      <label class="form__label">Начало первой недели (понедельник)</label>
+      <input
+        type="date"
+        class="form__input"
+        [value]="date()"
+        (input)="onDate($event)"
+      />
+    }
+
+    <label class="form__label">Сколько недель</label>
+    <input
+      type="number"
+      min="1"
+      max="52"
+      class="form__input"
+      [value]="count()"
+      (input)="onCount($event)"
+    />
+
+    <div class="form__actions">
+      <button type="button" class="btn btn--ghost" (click)="cancel.emit()">
+        Отмена
+      </button>
+      <button type="button" class="btn btn--primary" (click)="onCreate()">
+        Создать
+      </button>
+    </div>
+  </div>
+</app-modal>

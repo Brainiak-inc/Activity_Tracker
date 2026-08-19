@@ -1,6 +1,7 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { DisciplineComponent } from './components/discipline/discipline.component';
 import { OverviewComponent } from './components/overview/overview.component';
+import { PlanComponent } from './components/plan/plan.component';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import {
   DISCIPLINE_META,
@@ -9,7 +10,7 @@ import {
 } from './domain/discipline';
 import { DashboardService } from './services/dashboard.service';
 
-type TabKey = 'overview' | Discipline;
+type TabKey = 'overview' | 'plan' | Discipline;
 
 interface TabDef {
   key: TabKey;
@@ -20,7 +21,12 @@ interface TabDef {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [OverviewComponent, DisciplineComponent, SideMenuComponent],
+  imports: [
+    OverviewComponent,
+    DisciplineComponent,
+    PlanComponent,
+    SideMenuComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.less',
   host: { '(document:keydown.escape)': 'menuOpen.set(false)' },
@@ -43,6 +49,7 @@ export class AppComponent {
       label: DISCIPLINE_META[d].label,
       emoji: DISCIPLINE_META[d].emoji,
     })),
+    { key: 'plan', label: 'План', emoji: '📋' },
   ];
 
   readonly activeTab = signal<TabKey>('overview');
@@ -50,6 +57,10 @@ export class AppComponent {
 
   isOverview(key: TabKey): boolean {
     return key === 'overview';
+  }
+
+  isPlan(key: TabKey): boolean {
+    return key === 'plan';
   }
 
   asDiscipline(key: TabKey): Discipline {

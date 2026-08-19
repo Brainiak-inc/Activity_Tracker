@@ -36,6 +36,8 @@
     <main class="app__content">
       @if (isOverview(activeTab())) {
         <app-overview />
+      } @else if (isPlan(activeTab())) {
+        <app-plan />
       } @else {
         <app-discipline [discipline]="asDiscipline(activeTab())" />
       }
