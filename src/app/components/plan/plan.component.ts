@@ -57,8 +57,8 @@ export class PlanComponent {
     return p ? weekDayLabel(p, weekIndex, dayIndex) : '';
   }
 
-  emoji(d: Discipline): string {
-    return DISCIPLINE_META[d].emoji;
+  code(d: Discipline): string {
+    return DISCIPLINE_META[d].code;
   }
 
   addWeek(): void {

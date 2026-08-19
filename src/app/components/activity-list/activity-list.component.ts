@@ -15,10 +15,10 @@ import {
 })
 export class ActivityListComponent {
   activities = input.required<Activity[]>();
-  showEmoji = input<boolean>(true);
+  showTag = input<boolean>(true);
 
-  emoji(activity: Activity): string {
-    return DISCIPLINE_META[activity.discipline].emoji;
+  code(activity: Activity): string {
+    return DISCIPLINE_META[activity.discipline].code;
   }
 
   subtitle(activity: Activity): string {

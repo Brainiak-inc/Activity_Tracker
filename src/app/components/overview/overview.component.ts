@@ -22,7 +22,6 @@ export class OverviewComponent {
     return IRONMAN_DISCIPLINES.map((d) => ({
       key: d,
       label: DISCIPLINE_META[d].label,
-      emoji: DISCIPLINE_META[d].emoji,
       count: counts[d],
       ctl: Math.round(this.service.formFor(d)?.ctl ?? 0),
     }));

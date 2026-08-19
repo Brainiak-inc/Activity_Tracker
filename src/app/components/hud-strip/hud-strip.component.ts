@@ -1,10 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
 import { tsbStatus } from '../../domain/form-status';
 import { DashboardService } from '../../services/dashboard.service';
+import { InfoHintComponent } from '../info-hint/info-hint.component';
 
 @Component({
   selector: 'app-hud-strip',
   standalone: true,
+  imports: [InfoHintComponent],
   templateUrl: './hud-strip.component.html',
   styleUrl: './hud-strip.component.less',
 })

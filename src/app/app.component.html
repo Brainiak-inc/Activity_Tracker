@@ -1,42 +1,43 @@
 <div class="app">
   <header class="app__header">
-    <div class="app__left">
+    <div class="app__brand">◤ Ironman Tracker</div>
+    <div class="app__actions">
       <button
         type="button"
-        class="app__burger"
+        class="app__act"
         aria-label="Открыть меню"
         (click)="menuOpen.set(true)"
       >
-        ☰
+        ☰ Меню
       </button>
-      <div class="app__brand">
-        <span class="app__title">Ironman Tracker</span>
-      </div>
+      <label class="app__act app__act--accent">
+        <input type="file" accept=".csv" hidden (change)="onFile($event)" />
+        ⇪ Импорт
+      </label>
     </div>
-    <label class="app__import">
-      <input type="file" accept=".csv" hidden (change)="onFile($event)" />
-      <span class="app__import-btn">Импорт CSV</span>
-    </label>
   </header>
 
   @if (service.hasData()) {
-    <app-hud-strip class="app__hud" />
-
-    <nav class="tabs">
+    <nav class="nav">
       @for (t of tabs; track t.key) {
         <button
-          class="tabs__tab"
-          [class.tabs__tab--active]="activeTab() === t.key"
+          class="nav__i"
+          [class.nav__i--active]="activeTab() === t.key"
           (click)="activeTab.set(t.key)"
         >
-          <span class="tabs__emoji">{{ t.emoji }}</span>
-          <span class="tabs__count">{{ tabCount(t.key) }}</span>
-          <span class="tabs__label">{{ t.label }}</span>
+          {{ t.label }}<sup class="nav__count">{{ tabCount(t.key) }}</sup>
         </button>
       }
     </nav>
 
-    <main class="app__content">
+    <app-hud-strip class="app__hud" />
+
+    <div class="screenbar">
+      <span class="screenbar__t">▸ {{ activeLabel() }}</span>
+      <span class="screenbar__m">{{ screenContext() }}</span>
+    </div>
+
+    <main class="app__content screen">
       @if (isOverview(activeTab())) {
         <app-overview />
       } @else if (isPlan(activeTab())) {

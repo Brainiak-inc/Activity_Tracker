@@ -5,8 +5,7 @@
   <h2 class="overview__heading">Дисциплины</h2>
   <div class="overview__disciplines">
     @for (d of disciplines(); track d.key) {
-      <div class="discipline-mini">
-        <div class="discipline-mini__emoji">{{ d.emoji }}</div>
+      <div class="discipline-mini panel">
         <div class="discipline-mini__label">{{ d.label }}</div>
         <div class="discipline-mini__count">{{ d.count }}</div>
         <div class="discipline-mini__ctl">CTL {{ d.ctl }}</div>
