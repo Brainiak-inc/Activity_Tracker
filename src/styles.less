@@ -58,3 +58,126 @@ button {
   background: var(--surface-2);
   border-radius: 8px;
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: -6px;
+  }
+
+  &__text {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  &__check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+
+    input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+  }
+
+  &__input,
+  &__textarea {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+  }
+
+  &__textarea {
+    resize: vertical;
+  }
+
+  &__disc {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  &__disc-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    padding: 8px 2px;
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0.7;
+
+    &--active {
+      opacity: 1;
+      border-color: var(--accent);
+      color: var(--text);
+    }
+  }
+
+  &__disc-emoji {
+    font-size: 20px;
+  }
+
+  &__disc-label {
+    font-size: 10px;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 2px;
+  }
+
+  &__del {
+    margin-right: auto;
+  }
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &--ghost {
+    background: var(--surface-2);
+    color: var(--text-muted);
+  }
+
+  &--primary {
+    background: var(--accent);
+    color: #0a0b0d;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+  }
+
+  &--danger {
+    background: var(--bad);
+    color: #2a0606;
+  }
+}

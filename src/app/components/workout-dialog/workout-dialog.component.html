@@ -1,0 +1,52 @@
+<app-modal [title]="heading()" (close)="cancel.emit()">
+  <div class="form">
+    <div class="form__disc">
+      @for (d of disciplines; track d.key) {
+        <button
+          type="button"
+          class="form__disc-btn"
+          [class.form__disc-btn--active]="discipline() === d.key"
+          (click)="discipline.set(d.key)"
+        >
+          <span class="form__disc-emoji">{{ d.emoji }}</span>
+          <span class="form__disc-label">{{ d.label }}</span>
+        </button>
+      }
+    </div>
+
+    <input
+      class="form__input"
+      placeholder="Название"
+      [value]="title()"
+      (input)="onTitle($event)"
+    />
+
+    <textarea
+      class="form__textarea"
+      rows="3"
+      placeholder="Заметка…"
+      [value]="note()"
+      (input)="onNote($event)"
+    ></textarea>
+
+    <div class="form__actions">
+      @if (isEdit()) {
+        <button
+          type="button"
+          class="btn btn--danger form__del"
+          (click)="remove.emit()"
+        >
+          Удалить
+        </button>
+      }
+      <button
+        type="button"
+        class="btn btn--primary"
+        [disabled]="!title().trim()"
+        (click)="onSave()"
+      >
+        Сохранить
+      </button>
+    </div>
+  </div>
+</app-modal>

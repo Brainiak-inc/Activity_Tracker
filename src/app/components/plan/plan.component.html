@@ -1,0 +1,129 @@
+<div class="plan">
+  <div class="plan__header">
+    <h2 class="plan__title">Планы тренировок</h2>
+    <button
+      type="button"
+      class="plan__add"
+      aria-label="Создать план"
+      (click)="creating.set(true)"
+    >
+      +
+    </button>
+  </div>
+
+  @if (plans().length === 0) {
+    <div class="plan__empty">
+      Пока нет планов.<br />
+      Нажми <span class="plan__empty-plus">+</span>, чтобы создать первый.
+    </div>
+  } @else {
+    <div class="plan__tabs">
+      @for (p of plans(); track p.id) {
+        <button
+          type="button"
+          class="plan__tab"
+          [class.plan__tab--active]="p.id === activeId()"
+          (click)="selectPlan(p.id)"
+        >
+          {{ p.name }}
+        </button>
+      }
+    </div>
+
+    @if (activePlan(); as plan) {
+      <div class="plan__meta">
+        <span class="plan__meta-info">
+          {{ plan.startMonday ? 'С датами' : 'Без дат' }} ·
+          {{ plan.weeks.length }} нед.
+        </span>
+        <button
+          type="button"
+          class="plan__meta-del"
+          (click)="deletingPlan.set(true)"
+        >
+          Удалить план
+        </button>
+      </div>
+
+      @for (week of plan.weeks; track week.id; let wi = $index) {
+        <section class="week">
+          <header class="week__head">
+            <span class="week__range">{{ weekLabel(wi) }}</span>
+            <button
+              type="button"
+              class="week__delete"
+              aria-label="Удалить неделю"
+              (click)="deletingWeekId.set(week.id)"
+            >
+              ✕
+            </button>
+          </header>
+
+          @for (day of week.days; track $index; let di = $index) {
+            <div class="week__day">
+              <div class="week__day-label">{{ dayLabel(wi, di) }}</div>
+              <div class="week__workouts">
+                @for (w of day; track w.id) {
+                  <button
+                    type="button"
+                    class="workout"
+                    (click)="openEditWorkout(week.id, di, w)"
+                  >
+                    <span class="workout__emoji">{{ emoji(w.discipline) }}</span>
+                    <span class="workout__title">{{ w.title }}</span>
+                  </button>
+                }
+                <button
+                  type="button"
+                  class="week__add-workout"
+                  aria-label="Добавить тренировку"
+                  (click)="openAddWorkout(week.id, di)"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          }
+        </section>
+      }
+
+      <button type="button" class="plan__add-week" (click)="addWeek()">
+        ＋ неделя
+      </button>
+    }
+  }
+</div>
+
+@if (creating()) {
+  <app-plan-create-dialog
+    (create)="onCreatePlan($event)"
+    (cancel)="creating.set(false)"
+  />
+}
+
+@if (editing(); as ed) {
+  <app-workout-dialog
+    [workout]="ed.workout"
+    (save)="onSaveWorkout($event)"
+    (remove)="onRemoveWorkout()"
+    (cancel)="editing.set(null)"
+  />
+}
+
+@if (deletingWeekId()) {
+  <app-confirm-dialog
+    title="Удалить неделю?"
+    message="Все тренировки этой недели будут удалены."
+    (confirm)="onConfirmDeleteWeek()"
+    (cancel)="deletingWeekId.set(null)"
+  />
+}
+
+@if (deletingPlan()) {
+  <app-confirm-dialog
+    title="Удалить план?"
+    message="План и все его недели будут удалены."
+    (confirm)="onConfirmDeletePlan()"
+    (cancel)="deletingPlan.set(false)"
+  />
+}
