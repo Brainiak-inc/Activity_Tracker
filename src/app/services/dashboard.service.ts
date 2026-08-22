@@ -110,10 +110,8 @@ export class DashboardService {
     let added = 0;
     for (const a of result.activities) {
       const key = dedupKey(a);
-      if (!byKey.has(key)) {
-        byKey.set(key, a);
-        added++;
-      }
+      if (!byKey.has(key)) added++;
+      byKey.set(key, a);
     }
 
     const merged = [...byKey.values()].sort(

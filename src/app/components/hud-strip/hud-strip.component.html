@@ -1,0 +1,38 @@
+<div class="hud">
+  <div class="hud__tile panel">
+    <span class="hud__label">
+      Форма
+      <app-info-hint
+        hint="Баланс формы = CTL − ATL. Плюс — свежесть, минус — накопленная усталость."
+      />
+    </span>
+    <span class="hud__value" [style.color]="status()?.color ?? 'var(--text)'">
+      {{ round(tsb()) }}
+    </span>
+    @if (status(); as s) {
+      <span class="hud__sub" [style.color]="s.color">{{ s.label }}</span>
+    }
+  </div>
+
+  <div class="hud__tile panel">
+    <span class="hud__label">
+      Фитнес · CTL
+      <app-info-hint
+        hint="Хроническая нагрузка за ~42 дня — накопленный фитнес. ▲/▼ показывают изменение за последние 7 дней."
+      />
+    </span>
+    <span class="hud__value hud__value--accent">{{ round(ctl()) }}</span>
+    @if (trend(); as t) {
+      <span class="hud__sub">{{ t.arrow }} {{ t.delta }} за 7 дн</span>
+    }
+  </div>
+
+  <div class="hud__tile panel">
+    <span class="hud__label">
+      Нагрузка · 7D
+      <app-info-hint hint="Суммарная нагрузка (TSS) за последние 7 дней." />
+    </span>
+    <span class="hud__value">{{ round(weekly()) }}</span>
+    <span class="hud__sub">TSS</span>
+  </div>
+</div>

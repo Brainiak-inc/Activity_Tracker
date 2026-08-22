@@ -1,8 +1,17 @@
+import { Discipline } from './discipline';
+
 export function formatDuration(ms: number): string {
   const totalMin = Math.round(ms / 60000);
   const h = Math.floor(totalMin / 60);
   const m = totalMin % 60;
   return h > 0 ? `${h} ч ${m} мин` : `${m} мин`;
+}
+
+export function formatDistance(discipline: Discipline, km: number): string {
+  if (discipline === Discipline.Swim) {
+    return `${Math.round(km * 1000).toLocaleString('ru-RU')} м`;
+  }
+  return `${km.toFixed(1)} км`;
 }
 
 export function formatDate(d: Date): string {

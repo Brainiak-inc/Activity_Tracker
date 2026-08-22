@@ -1,5 +1,5 @@
 import { Activity } from '../domain/activity';
-import { disciplineFromGarminType } from '../domain/discipline';
+import { Discipline, disciplineFromGarminType } from '../domain/discipline';
 
 export interface ImportResult {
   activities: Activity[];
@@ -121,13 +121,21 @@ export class GarminCsvParser {
       }
 
       const garminType = cell(row, 'Activity Type') ?? 'Unknown';
+      const discipline = disciplineFromGarminType(garminType);
+      const rawDistance = parseNum(cell(row, 'Distance'));
+      const distanceKm =
+        rawDistance === null
+          ? null
+          : discipline === Discipline.Swim
+            ? rawDistance / 1000
+            : rawDistance;
       activities.push({
         start,
-        discipline: disciplineFromGarminType(garminType),
+        discipline,
         garminType,
         title: cell(row, 'Title') ?? garminType,
         durationMs,
-        distanceKm: parseNum(cell(row, 'Distance')),
+        distanceKm,
         avgHr: parseNum(cell(row, 'Avg HR')),
         maxHr: parseNum(cell(row, 'Max HR')),
         calories: parseNum(cell(row, 'Calories')),

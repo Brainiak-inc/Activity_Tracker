@@ -1,27 +1,20 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { DisciplineComponent } from './components/discipline/discipline.component';
+import { HudStripComponent } from './components/hud-strip/hud-strip.component';
 import { OverviewComponent } from './components/overview/overview.component';
 import { PlanComponent } from './components/plan/plan.component';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
-import {
-  DISCIPLINE_META,
-  Discipline,
-  IRONMAN_DISCIPLINES,
-} from './domain/discipline';
+import { Discipline } from './domain/discipline';
 import { DashboardService } from './services/dashboard.service';
+import { PlanService } from './services/plan.service';
 
 type TabKey = 'overview' | 'plan' | Discipline;
-
-interface TabDef {
-  key: TabKey;
-  label: string;
-  emoji: string;
-}
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
+    HudStripComponent,
     OverviewComponent,
     DisciplineComponent,
     PlanComponent,
@@ -33,6 +26,7 @@ interface TabDef {
 })
 export class AppComponent {
   readonly service = inject(DashboardService);
+  private readonly planService = inject(PlanService);
 
   readonly menuOpen = signal(false);
 
@@ -42,14 +36,12 @@ export class AppComponent {
     });
   }
 
-  readonly tabs: TabDef[] = [
-    { key: 'overview', label: 'Общее', emoji: '📊' },
-    ...IRONMAN_DISCIPLINES.map((d) => ({
-      key: d,
-      label: DISCIPLINE_META[d].label,
-      emoji: DISCIPLINE_META[d].emoji,
-    })),
-    { key: 'plan', label: 'План', emoji: '📋' },
+  readonly tabs: { key: TabKey; label: string }[] = [
+    { key: 'overview', label: 'Общее' },
+    { key: Discipline.Swim, label: 'Плав' },
+    { key: Discipline.Bike, label: 'Вело' },
+    { key: Discipline.Run, label: 'Бег' },
+    { key: 'plan', label: 'План' },
   ];
 
   readonly activeTab = signal<TabKey>('overview');
@@ -63,8 +55,25 @@ export class AppComponent {
     return key === 'plan';
   }
 
+  tabCount(key: TabKey): number {
+    if (key === 'overview') return this.service.activities().length;
+    if (key === 'plan') return this.planService.plans().length;
+    return this.service.countByDiscipline()[key];
+  }
+
   asDiscipline(key: TabKey): Discipline {
     return key as Discipline;
+  }
+
+  activeLabel(): string {
+    return this.tabs.find((t) => t.key === this.activeTab())?.label ?? '';
+  }
+
+  screenContext(): string {
+    const key = this.activeTab();
+    if (key === 'overview') return 'Сводка';
+    if (key === 'plan') return 'Планировщик';
+    return 'Аналитика';
   }
 
   onFile(event: Event): void {

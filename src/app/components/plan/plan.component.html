@@ -69,7 +69,7 @@
                     class="workout"
                     (click)="openEditWorkout(week.id, di, w)"
                   >
-                    <span class="workout__emoji">{{ emoji(w.discipline) }}</span>
+                    <span class="workout__tag">{{ code(w.discipline) }}</span>
                     <span class="workout__title">{{ w.title }}</span>
                   </button>
                 }
