@@ -9,6 +9,7 @@ export class BackupService {
     'lthr_manual_v1',
     'adherence_v1',
     'plan_v1',
+    'race_config_v1',
   ];
 
   export(): void {

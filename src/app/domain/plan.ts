@@ -1,14 +1,20 @@
 import { startOfDay } from './activity';
-import { Discipline } from './discipline';
+import { Discipline, IRONMAN_DISCIPLINES } from './discipline';
 
 export interface PlannedWorkout {
   id: string;
   discipline: Discipline;
   title: string;
   note: string;
+  distanceKm: number | null;
 }
 
 export type WorkoutInput = Omit<PlannedWorkout, 'id'>;
+
+export interface DisciplineVolume {
+  discipline: Discipline;
+  km: number;
+}
 
 export interface PlanWeek {
   id: string;
@@ -54,6 +60,21 @@ export function weekProgress(week: PlanWeek): WeekProgress {
     if (week.done[i]) done++;
   });
   return { done, total, complete: total > 0 && done === total };
+}
+
+export function weekVolume(week: PlanWeek): DisciplineVolume[] {
+  const totals = new Map<Discipline, number>();
+  week.days.forEach((day) => {
+    day.forEach((w) => {
+      if (w.distanceKm == null) return;
+      if (!IRONMAN_DISCIPLINES.includes(w.discipline)) return;
+      totals.set(w.discipline, (totals.get(w.discipline) ?? 0) + w.distanceKm);
+    });
+  });
+  return IRONMAN_DISCIPLINES.filter((d) => totals.has(d)).map((d) => ({
+    discipline: d,
+    km: totals.get(d) ?? 0,
+  }));
 }
 
 function dateFromStart(startMonday: string, offset: number): Date {

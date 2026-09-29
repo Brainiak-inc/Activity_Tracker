@@ -17,48 +17,36 @@
     </div>
   </header>
 
+  <nav class="nav">
+    @for (t of tabs; track t.key) {
+      <button
+        class="nav__i"
+        [class.nav__i--active]="activeTab() === t.key"
+        (click)="activeTab.set(t.key)"
+      >
+        {{ t.label }}<sup class="nav__count">{{ tabCount(t.key) }}</sup>
+      </button>
+    }
+  </nav>
+
   @if (service.hasData()) {
-    <nav class="nav">
-      @for (t of tabs; track t.key) {
-        <button
-          class="nav__i"
-          [class.nav__i--active]="activeTab() === t.key"
-          (click)="activeTab.set(t.key)"
-        >
-          {{ t.label }}<sup class="nav__count">{{ tabCount(t.key) }}</sup>
-        </button>
-      }
-    </nav>
-
     <app-hud-strip class="app__hud" />
-
-    <div class="screenbar">
-      <span class="screenbar__t">▸ {{ activeLabel() }}</span>
-      <span class="screenbar__m">{{ screenContext() }}</span>
-    </div>
-
-    <main class="app__content screen">
-      @if (isOverview(activeTab())) {
-        <app-overview />
-      } @else if (isPlan(activeTab())) {
-        <app-plan />
-      } @else {
-        <app-discipline [discipline]="asDiscipline(activeTab())" />
-      }
-    </main>
-  } @else {
-    <div class="empty">
-      <h2 class="empty__title">Импортируй данные из Garmin</h2>
-      <p class="empty__text">
-        Garmin Connect → Activities → Export CSV, затем загрузи файл сюда —
-        построим аналитику.
-      </p>
-      <label class="empty__btn">
-        <input type="file" accept=".csv" hidden (change)="onFile($event)" />
-        Выбрать CSV-файл
-      </label>
-    </div>
   }
+
+  <div class="screenbar">
+    <span class="screenbar__t">▸ {{ activeLabel() }}</span>
+    <span class="screenbar__m">{{ screenContext() }}</span>
+  </div>
+
+  <main class="app__content screen">
+    @if (isOverview(activeTab())) {
+      <app-overview />
+    } @else if (isPlan(activeTab())) {
+      <app-plan />
+    } @else {
+      <app-discipline [discipline]="asDiscipline(activeTab())" />
+    }
+  </main>
 
   @if (toast(); as t) {
     <div class="toast">{{ t }}</div>

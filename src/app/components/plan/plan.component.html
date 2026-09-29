@@ -47,6 +47,7 @@
 
       @for (week of plan.weeks; track week.id; let wi = $index) {
         @let p = progress(week);
+        @let vol = volume(week);
         <section class="week" [class.week--done]="p.complete">
           <header class="week__head">
             <span class="week__range">{{ weekLabel(wi) }}</span>
@@ -77,6 +78,17 @@
             </div>
           </header>
 
+          @if (vol.length > 0) {
+            <div class="week__volume">
+              @for (v of vol; track v.discipline) {
+                <span class="week__vol">
+                  <span class="week__vol-code">{{ code(v.discipline) }}</span>
+                  {{ volumeText(v) }}
+                </span>
+              }
+            </div>
+          }
+
           @for (day of week.days; track $index; let di = $index) {
             <div class="week__day" [class.week__day--done]="week.done[di]">
               @if (day.length > 0) {
@@ -101,7 +113,12 @@
                     (click)="openEditWorkout(week.id, di, w)"
                   >
                     <span class="workout__tag">{{ code(w.discipline) }}</span>
-                    <span class="workout__title">{{ w.title }}</span>
+                    @if (w.distanceKm) {
+                      <span class="workout__dist">{{ dist(w) }}</span>
+                    }
+                    @if (w.title) {
+                      <span class="workout__title">{{ w.title }}</span>
+                    }
                   </button>
                 }
                 <button

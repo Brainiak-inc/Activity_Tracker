@@ -44,7 +44,9 @@ export class AppComponent {
     { key: 'plan', label: 'План' },
   ];
 
-  readonly activeTab = signal<TabKey>('overview');
+  readonly activeTab = signal<TabKey>(
+    this.service.hasData() ? 'overview' : 'plan',
+  );
   readonly toast = signal<string | null>(null);
 
   isOverview(key: TabKey): boolean {

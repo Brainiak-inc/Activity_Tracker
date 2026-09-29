@@ -1,18 +1,54 @@
-<div class="overview">
-  <h2 class="overview__heading">Динамика формы</h2>
-  <app-fitness-chart [series]="series()" />
-
-  <h2 class="overview__heading">Дисциплины</h2>
-  <div class="overview__disciplines">
-    @for (d of disciplines(); track d.key) {
-      <div class="discipline-mini panel">
-        <div class="discipline-mini__label">{{ d.label }}</div>
-        <div class="discipline-mini__count">{{ d.count }}</div>
-        <div class="discipline-mini__ctl">CTL {{ d.ctl }}</div>
-      </div>
+@if (hasData()) {
+  <div class="overview">
+    @if (raceConfig(); as cfg) {
+      @if (readiness(); as r) {
+        <app-readiness-panel
+          [readiness]="r"
+          [config]="cfg"
+          (edit)="configuring.set(true)"
+          (clear)="clearRace()"
+        />
+      }
+    } @else {
+      <button
+        type="button"
+        class="overview__cta"
+        (click)="configuring.set(true)"
+      >
+        <span class="overview__cta-mark">▸</span>
+        Определить готовность к Ironman
+      </button>
     }
-  </div>
 
-  <h2 class="overview__heading">Последние тренировки</h2>
-  <app-activity-list [activities]="recent()" />
-</div>
+    <h2 class="overview__heading">Динамика формы</h2>
+    <app-fitness-chart [series]="series()" />
+
+    <h2 class="overview__heading">Дисциплины</h2>
+    <div class="overview__disciplines">
+      @for (d of disciplines(); track d.key) {
+        <div class="discipline-mini panel">
+          <div class="discipline-mini__label">{{ d.label }}</div>
+          <div class="discipline-mini__count">{{ d.count }}</div>
+          <div class="discipline-mini__ctl">CTL {{ d.ctl }}</div>
+        </div>
+      }
+    </div>
+
+    <h2 class="overview__heading">Последние тренировки</h2>
+    <app-activity-list [activities]="recent()" />
+  </div>
+} @else {
+  <div class="overview__empty panel">
+    Нет данных для аналитики.<br />
+    Нажми <span class="overview__accent">⇪ Импорт</span> вверху и загрузи
+    CSV-экспорт из Garmin — построим графики формы и статистику.
+  </div>
+}
+
+@if (configuring()) {
+  <app-race-dialog
+    [config]="raceConfig()"
+    (save)="onSaveRace($event)"
+    (cancel)="configuring.set(false)"
+  />
+}

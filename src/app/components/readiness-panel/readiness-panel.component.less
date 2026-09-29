@@ -1,0 +1,189 @@
+:host {
+  display: block;
+}
+
+.readiness {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__title {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  &__sub {
+    margin-top: 2px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  &__tools {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  &__tool {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--accent);
+    }
+  }
+
+  &__overall {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__pct {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 0 14px var(--accent-glow);
+  }
+
+  &__pct-unit {
+    font-size: 18px;
+    margin-left: 1px;
+  }
+
+  &__gauge-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__gauge {
+    height: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  &__gauge-fill {
+    display: block;
+    height: 100%;
+  }
+
+  &__limit {
+    font-size: 12px;
+    color: var(--text-muted);
+
+    b {
+      color: var(--text);
+    }
+  }
+
+  &__discs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__disc {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__disc-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  &__disc-code {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+
+  &__disc-name {
+    color: var(--text);
+  }
+
+  &__disc-pct {
+    margin-left: auto;
+    font-weight: 700;
+  }
+
+  &__disc-bar {
+    height: 5px;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+
+  &__disc-fill {
+    display: block;
+    height: 100%;
+  }
+
+  &__disc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  &__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  &__eta {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  &__status {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  &__warn {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--fatigue);
+  }
+
+  &__note {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    opacity: 0.8;
+  }
+}

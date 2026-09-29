@@ -154,6 +154,26 @@
     gap: 12px;
   }
 
+  &__volume {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 8px 0 4px;
+  }
+
+  &__vol {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  &__vol-code {
+    color: var(--accent);
+    font-size: 9px;
+    font-weight: 700;
+    margin-right: 5px;
+  }
+
   &__badge {
     font-size: 9px;
     font-weight: 700;
@@ -285,7 +305,7 @@
   max-width: 100%;
   border: 1px solid var(--border);
   background: var(--surface-2);
-  border-radius: 10px;
+  border-radius: 2px;
   padding: 6px 10px;
   color: var(--text);
   font-size: 13px;
@@ -298,7 +318,12 @@
     color: var(--accent);
   }
 
+  &__dist {
+    font-weight: 600;
+  }
+
   &__title {
+    color: var(--text-muted);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -18,6 +18,50 @@
     grid-template-columns: repeat(3, 1fr);
     gap: var(--gap);
   }
+
+  &__empty {
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  &__accent {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  &__cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    border: 1px solid var(--accent);
+    background: var(--surface);
+    color: var(--accent);
+    border-radius: var(--radius);
+    padding: 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 18px -8px var(--accent-glow);
+
+    &:hover {
+      background: var(--surface-2);
+    }
+  }
+
+  &__cta-mark {
+    text-shadow: 0 0 8px var(--accent-glow);
+  }
 }
 
 .discipline-mini {

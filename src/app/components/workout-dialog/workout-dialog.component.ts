@@ -26,10 +26,14 @@ export class WorkoutDialogComponent implements OnInit {
   readonly discipline = signal<Discipline>(Discipline.Run);
   readonly title = signal('');
   readonly note = signal('');
+  readonly distance = signal<number | null>(null);
 
   readonly isEdit = computed(() => this.workout() !== null);
   readonly heading = computed(() =>
     this.workout() ? 'Тренировка' : 'Новая тренировка',
+  );
+  readonly unit = computed(() =>
+    this.discipline() === Discipline.Swim ? 'м' : 'км',
   );
 
   ngOnInit(): void {
@@ -38,6 +42,13 @@ export class WorkoutDialogComponent implements OnInit {
       this.discipline.set(w.discipline);
       this.title.set(w.title);
       this.note.set(w.note);
+      if (w.distanceKm != null) {
+        this.distance.set(
+          w.discipline === Discipline.Swim
+            ? Math.round(w.distanceKm * 1000)
+            : w.distanceKm,
+        );
+      }
     }
   }
 
@@ -49,13 +60,24 @@ export class WorkoutDialogComponent implements OnInit {
     this.note.set((event.target as HTMLTextAreaElement).value);
   }
 
+  onDistance(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.distance.set(value === '' ? null : Number(value));
+  }
+
   onSave(): void {
-    const title = this.title().trim();
-    if (!title) return;
+    const raw = this.distance();
+    const distanceKm =
+      raw == null || !Number.isFinite(raw) || raw <= 0
+        ? null
+        : this.discipline() === Discipline.Swim
+          ? raw / 1000
+          : raw;
     this.save.emit({
       discipline: this.discipline(),
-      title,
+      title: this.title().trim(),
       note: this.note().trim(),
+      distanceKm,
     });
   }
 }

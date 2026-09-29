@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { DISCIPLINE_META, Discipline } from '../../domain/discipline';
 import {
+  DisciplineVolume,
   PlanWeek,
   PlannedWorkout,
   WeekProgress,
@@ -8,7 +9,9 @@ import {
   weekDayLabel,
   weekLabel,
   weekProgress,
+  weekVolume,
 } from '../../domain/plan';
+import { formatDistance } from '../../domain/format';
 import { PlanService } from '../../services/plan.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import {
@@ -62,6 +65,18 @@ export class PlanComponent {
 
   code(d: Discipline): string {
     return DISCIPLINE_META[d].code;
+  }
+
+  dist(w: PlannedWorkout): string {
+    return w.distanceKm != null ? formatDistance(w.discipline, w.distanceKm) : '';
+  }
+
+  volume(week: PlanWeek): DisciplineVolume[] {
+    return weekVolume(week);
+  }
+
+  volumeText(v: DisciplineVolume): string {
+    return formatDistance(v.discipline, v.km);
   }
 
   progress(week: PlanWeek): WeekProgress {

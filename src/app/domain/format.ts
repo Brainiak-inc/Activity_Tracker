@@ -14,6 +14,12 @@ export function formatDistance(discipline: Discipline, km: number): string {
   return `${km.toFixed(1)} км`;
 }
 
+export function formatClock(totalSeconds: number): string {
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  return `${h}:${`${m}`.padStart(2, '0')}`;
+}
+
 export function formatDate(d: Date): string {
   return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 }
