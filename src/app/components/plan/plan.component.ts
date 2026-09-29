@@ -1,10 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { DISCIPLINE_META, Discipline } from '../../domain/discipline';
 import {
+  PlanWeek,
   PlannedWorkout,
+  WeekProgress,
   WorkoutInput,
   weekDayLabel,
   weekLabel,
+  weekProgress,
 } from '../../domain/plan';
 import { PlanService } from '../../services/plan.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
@@ -59,6 +62,19 @@ export class PlanComponent {
 
   code(d: Discipline): string {
     return DISCIPLINE_META[d].code;
+  }
+
+  progress(week: PlanWeek): WeekProgress {
+    return weekProgress(week);
+  }
+
+  segments(total: number): number[] {
+    return Array.from({ length: total }, (_, i) => i);
+  }
+
+  toggleDay(weekId: string, dayIndex: number): void {
+    const p = this.activePlan();
+    if (p) this.plan.toggleDay(p.id, weekId, dayIndex);
   }
 
   addWeek(): void {

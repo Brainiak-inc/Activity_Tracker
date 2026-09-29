@@ -46,21 +46,52 @@
       </div>
 
       @for (week of plan.weeks; track week.id; let wi = $index) {
-        <section class="week">
+        @let p = progress(week);
+        <section class="week" [class.week--done]="p.complete">
           <header class="week__head">
             <span class="week__range">{{ weekLabel(wi) }}</span>
-            <button
-              type="button"
-              class="week__delete"
-              aria-label="Удалить неделю"
-              (click)="deletingWeekId.set(week.id)"
-            >
-              ✕
-            </button>
+            <div class="week__head-right">
+              @if (p.complete) {
+                <span class="week__badge">◉ Выполнено</span>
+              } @else if (p.total > 0) {
+                <span class="week__progress">
+                  <span class="week__bar">
+                    @for (s of segments(p.total); track $index) {
+                      <span
+                        class="week__seg"
+                        [class.week__seg--on]="$index < p.done"
+                      ></span>
+                    }
+                  </span>
+                  {{ p.done }}/{{ p.total }}
+                </span>
+              }
+              <button
+                type="button"
+                class="week__delete"
+                aria-label="Удалить неделю"
+                (click)="deletingWeekId.set(week.id)"
+              >
+                ✕
+              </button>
+            </div>
           </header>
 
           @for (day of week.days; track $index; let di = $index) {
-            <div class="week__day">
+            <div class="week__day" [class.week__day--done]="week.done[di]">
+              @if (day.length > 0) {
+                <button
+                  type="button"
+                  class="week__check"
+                  [class.week__check--on]="week.done[di]"
+                  aria-label="Отметить день выполненным"
+                  (click)="toggleDay(week.id, di)"
+                >
+                  ✓
+                </button>
+              } @else {
+                <span class="week__check-slot"></span>
+              }
               <div class="week__day-label">{{ dayLabel(wi, di) }}</div>
               <div class="week__workouts">
                 @for (w of day; track w.id) {
