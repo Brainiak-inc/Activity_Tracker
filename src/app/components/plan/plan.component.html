@@ -48,6 +48,7 @@
       @for (week of plan.weeks; track week.id; let wi = $index) {
         @let p = progress(week);
         @let vol = volume(week);
+        @let cmp = comparison(wi, week);
         <section class="week" [class.week--done]="p.complete">
           <header class="week__head">
             <span class="week__range">{{ weekLabel(wi) }}</span>
@@ -78,7 +79,23 @@
             </div>
           </header>
 
-          @if (vol.length > 0) {
+          @if (cmp && cmp.length > 0) {
+            <div class="week__cmp">
+              @for (c of cmp; track c.discipline) {
+                <div class="week__cmp-row">
+                  <span class="week__cmp-code">{{ code(c.discipline) }}</span>
+                  <div class="week__cmp-bar">
+                    <span
+                      class="week__cmp-fill"
+                      [style.width.%]="cmpPercent(c)"
+                      [style.background]="cmpColor(c)"
+                    ></span>
+                  </div>
+                  <span class="week__cmp-val">{{ cmpText(c) }}</span>
+                </div>
+              }
+            </div>
+          } @else if (vol.length > 0) {
             <div class="week__volume">
               @for (v of vol; track v.discipline) {
                 <span class="week__vol">
