@@ -2,6 +2,7 @@ export enum Discipline {
   Run = 'run',
   Bike = 'bike',
   Swim = 'swim',
+  Strength = 'strength',
   Other = 'other',
 }
 
@@ -14,6 +15,7 @@ export const DISCIPLINE_META: Record<Discipline, DisciplineMeta> = {
   [Discipline.Run]: { label: 'Бег', code: 'БЕГ' },
   [Discipline.Bike]: { label: 'Велосипед', code: 'ВЕЛ' },
   [Discipline.Swim]: { label: 'Плавание', code: 'ПЛВ' },
+  [Discipline.Strength]: { label: 'Силовая', code: 'СИЛ' },
   [Discipline.Other]: { label: 'Другое', code: 'ПРЧ' },
 };
 
@@ -31,6 +33,7 @@ export function disciplineFromGarminType(rawType: string): Discipline {
     return Discipline.Bike;
   }
   if (t.includes('run')) return Discipline.Run;
+  if (t.includes('strength')) return Discipline.Strength;
 
   return Discipline.Other;
 }

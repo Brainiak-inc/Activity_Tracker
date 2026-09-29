@@ -19,6 +19,7 @@ export class WorkoutDialogComponent implements OnInit {
     Discipline.Run,
     Discipline.Bike,
     Discipline.Swim,
+    Discipline.Strength,
     Discipline.Other,
   ].map((key) => ({ key, ...DISCIPLINE_META[key] }));
 

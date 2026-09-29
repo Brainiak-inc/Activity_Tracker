@@ -13,6 +13,13 @@ export type WorkoutInput = Omit<PlannedWorkout, 'id'>;
 export interface PlanWeek {
   id: string;
   days: PlannedWorkout[][];
+  done: boolean[];
+}
+
+export interface WeekProgress {
+  done: number;
+  total: number;
+  complete: boolean;
 }
 
 export interface TrainingPlan {
@@ -34,7 +41,19 @@ export function emptyWeek(): PlanWeek {
   return {
     id: crypto.randomUUID(),
     days: Array.from({ length: 7 }, () => []),
+    done: Array.from({ length: 7 }, () => false),
   };
+}
+
+export function weekProgress(week: PlanWeek): WeekProgress {
+  let total = 0;
+  let done = 0;
+  week.days.forEach((day, i) => {
+    if (day.length === 0) return;
+    total++;
+    if (week.done[i]) done++;
+  });
+  return { done, total, complete: total > 0 && done === total };
 }
 
 function dateFromStart(startMonday: string, offset: number): Date {

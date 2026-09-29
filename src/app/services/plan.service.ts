@@ -109,6 +109,14 @@ export class PlanService {
     }));
   }
 
+  toggleDay(planId: string, weekId: string, dayIndex: number): void {
+    this.mutateWeek(planId, weekId, (w) => {
+      const done = [...w.done];
+      done[dayIndex] = !done[dayIndex];
+      return { ...w, done };
+    });
+  }
+
   private mutatePlan(
     planId: string,
     fn: (p: TrainingPlan) => TrainingPlan,
@@ -139,7 +147,13 @@ export class PlanService {
         Array.isArray(data) &&
         data.every((p) => p && Array.isArray(p.weeks))
       ) {
-        return data as TrainingPlan[];
+        return (data as TrainingPlan[]).map((p) => ({
+          ...p,
+          weeks: p.weeks.map((w) => ({
+            ...w,
+            done: w.done ?? Array.from({ length: 7 }, () => false),
+          })),
+        }));
       }
       return [];
     } catch {
