@@ -22,15 +22,28 @@ export interface DisciplineReadiness {
 
 export type RaceStatus = 'ahead' | 'ontrack' | 'behind';
 
+export interface FitnessInput {
+  ctl: number;
+  tsb: number;
+  ctlTrend: number;
+}
+
 export interface Readiness {
   overall: number;
+  volumeScore: number;
   disciplines: DisciplineReadiness[];
   limiting: Discipline;
   monthsToReady: number;
   weeksToRace: number | null;
   status: RaceStatus | null;
   hasVolume: boolean;
+  ctl: number | null;
+  tsb: number | null;
+  ctlTrend: number | null;
+  fitnessBonus: number;
 }
+
+const FITNESS_BONUS = 4;
 
 interface DiscTarget {
   weekly: number;
@@ -94,6 +107,13 @@ function longestSession(
   return max;
 }
 
+function paceFactor(config: RaceConfig): number {
+  const cutoff = RACE_CUTOFF_SECONDS[config.distance];
+  if (!config.targetSeconds || config.targetSeconds <= 0) return 1;
+  const speedUp = cutoff / config.targetSeconds;
+  return Math.min(2, Math.max(1, speedUp));
+}
+
 function estimateMonths(
   disciplines: DisciplineReadiness[],
   fromZero: boolean,
@@ -114,34 +134,55 @@ function estimateMonths(
 export function computeReadiness(
   config: RaceConfig,
   activities: Activity[],
+  fitness: FitnessInput | null = null,
 ): Readiness {
   const now = Date.now();
   const spec = RACE_SPEC[config.distance];
+  const goalFactor = paceFactor(config);
 
   const disciplines: DisciplineReadiness[] = IRONMAN_DISCIPLINES.map((d) => {
-    const target = spec[d];
+    const base = spec[d];
+    const targetWeeklyKm = base.weekly * goalFactor;
+    const targetLongKm = base.long * goalFactor;
     const weeklyKm = weeklyVolume(activities, d, now, 4);
     const longestKm = longestSession(activities, d, now, 12);
-    const volRatio = Math.min(1, weeklyKm / target.weekly);
-    const longRatio = Math.min(1, longestKm / target.long);
+    const volRatio = Math.min(1, weeklyKm / targetWeeklyKm);
+    const longRatio = Math.min(1, longestKm / targetLongKm);
     const percent = Math.round((0.6 * volRatio + 0.4 * longRatio) * 100);
     return {
       discipline: d,
       percent,
       weeklyKm,
-      targetWeeklyKm: target.weekly,
+      targetWeeklyKm,
       longestKm,
-      targetLongKm: target.long,
+      targetLongKm,
     };
   });
 
   const percents = disciplines.map((d) => d.percent);
   const min = Math.min(...percents);
   const mean = percents.reduce((s, x) => s + x, 0) / percents.length;
-  const overall = Math.round(0.5 * min + 0.5 * mean);
+  const volumeScore = Math.round(0.5 * min + 0.5 * mean);
   const limiting = disciplines.reduce((a, b) =>
     b.percent < a.percent ? b : a,
   ).discipline;
+
+  let ctl: number | null = null;
+  let tsb: number | null = null;
+  let ctlTrend: number | null = null;
+  let fitnessBonus = 0;
+  if (fitness) {
+    ctl = Math.round(fitness.ctl);
+    tsb = Math.round(fitness.tsb);
+    ctlTrend = fitness.ctlTrend;
+    fitnessBonus =
+      fitness.ctlTrend > 0.5
+        ? FITNESS_BONUS
+        : fitness.ctlTrend < -0.5
+          ? -FITNESS_BONUS
+          : 0;
+  }
+  const overall = Math.max(0, Math.min(100, volumeScore + fitnessBonus));
 
   const monthsToReady = estimateMonths(disciplines, config.fromZero);
 
@@ -165,11 +206,16 @@ export function computeReadiness(
 
   return {
     overall,
+    volumeScore,
     disciplines,
     limiting,
     monthsToReady,
     weeksToRace,
     status,
     hasVolume,
+    ctl,
+    tsb,
+    ctlTrend,
+    fitnessBonus,
   };
 }

@@ -1,6 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 import { DISCIPLINE_META, Discipline } from '../../domain/discipline';
 import { formatClock, formatDistance } from '../../domain/format';
+import { tsbStatus } from '../../domain/form-status';
 import { RACE_LABEL, RaceConfig, Readiness } from '../../domain/readiness';
 
 function pluralMonths(m: number): string {
@@ -54,6 +55,45 @@ export class ReadinessPanelComponent {
   readonly statusColor = computed(() =>
     this.readiness().status === 'behind' ? 'var(--warn)' : 'var(--ok)',
   );
+
+  readonly hasFitness = computed(() => this.readiness().ctl !== null);
+
+  readonly trend = computed(() => {
+    const t = this.readiness().ctlTrend;
+    if (t === null) return null;
+    return {
+      arrow: t > 0.5 ? '▲' : t < -0.5 ? '▼' : '→',
+      color:
+        t > 0.5
+          ? 'var(--accent)'
+          : t < -0.5
+            ? 'var(--fatigue)'
+            : 'var(--text-muted)',
+    };
+  });
+
+  readonly freshness = computed(() => {
+    const tsb = this.readiness().tsb;
+    return tsb === null ? null : tsbStatus(tsb);
+  });
+
+  readonly tsbText = computed(() => {
+    const tsb = this.readiness().tsb;
+    if (tsb === null) return '';
+    return tsb > 0 ? `+${tsb}` : `${tsb}`;
+  });
+
+  readonly fitnessNote = computed(() => {
+    const r = this.readiness();
+    if (r.ctl === null) return null;
+    if (r.fitnessBonus > 0) {
+      return `Фитнес растёт — оценка объёма ${r.volumeScore}% поднята до ${r.overall}%`;
+    }
+    if (r.fitnessBonus < 0) {
+      return `Фитнес снижается — оценка объёма ${r.volumeScore}% снижена до ${r.overall}%`;
+    }
+    return 'Фитнес стабилен — оценка по объёму без поправки';
+  });
 
   code(d: Discipline): string {
     return DISCIPLINE_META[d].code;

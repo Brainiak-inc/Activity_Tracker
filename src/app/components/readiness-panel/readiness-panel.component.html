@@ -67,6 +67,27 @@
     }
   </div>
 
+  @if (hasFitness()) {
+    <div class="readiness__fitness">
+      <span class="readiness__fitness-tag">ФОРМА</span>
+      <span class="readiness__fitness-item">
+        CTL {{ r.ctl }}
+        @if (trend(); as t) {
+          <span [style.color]="t.color">{{ t.arrow }}</span>
+        }
+      </span>
+      @if (freshness(); as f) {
+        <span class="readiness__fitness-item">
+          свежесть {{ tsbText() }} ·
+          <span [style.color]="f.color">{{ f.label }}</span>
+        </span>
+      }
+    </div>
+    @if (fitnessNote(); as note) {
+      <div class="readiness__fitness-note">{{ note }}</div>
+    }
+  }
+
   <div class="readiness__foot">
     <span class="readiness__eta">{{ etaText() }}</span>
     @if (statusText(); as st) {

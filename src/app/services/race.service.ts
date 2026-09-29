@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { RaceConfig, computeReadiness } from '../domain/readiness';
+import { FitnessInput, RaceConfig, computeReadiness } from '../domain/readiness';
 import { DashboardService } from './dashboard.service';
 
 const KEY = 'race_config_v1';
@@ -11,9 +11,19 @@ export class RaceService {
   private readonly _config = signal<RaceConfig | null>(this.read());
   readonly config = this._config.asReadonly();
 
+  private readonly fitness = computed<FitnessInput | null>(() => {
+    const series = this.dashboard.overallSeries();
+    if (!series.length) return null;
+    const last = series[series.length - 1];
+    const trend =
+      series.length >= 8 ? last.ctl - series[series.length - 8].ctl : 0;
+    return { ctl: last.ctl, tsb: last.tsb, ctlTrend: trend };
+  });
+
   readonly readiness = computed(() => {
     const c = this._config();
-    return c ? computeReadiness(c, this.dashboard.activities()) : null;
+    if (!c) return null;
+    return computeReadiness(c, this.dashboard.activities(), this.fitness());
   });
 
   setConfig(config: RaceConfig): void {
