@@ -19,8 +19,8 @@ export class ActivityListComponent {
   editable = input<boolean>(false);
   select = output<Activity>();
 
-  code(activity: Activity): string {
-    return DISCIPLINE_META[activity.discipline].code;
+  label(activity: Activity): string {
+    return DISCIPLINE_META[activity.discipline].label;
   }
 
   subtitle(activity: Activity): string {

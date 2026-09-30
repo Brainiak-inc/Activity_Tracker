@@ -83,7 +83,7 @@
             <div class="week__cmp">
               @for (c of cmp; track c.discipline) {
                 <div class="week__cmp-row">
-                  <span class="week__cmp-code">{{ code(c.discipline) }}</span>
+                  <span class="week__cmp-code">{{ label(c.discipline) }}</span>
                   <div class="week__cmp-bar">
                     <span
                       class="week__cmp-fill"
@@ -99,7 +99,7 @@
             <div class="week__volume">
               @for (v of vol; track v.discipline) {
                 <span class="week__vol">
-                  <span class="week__vol-code">{{ code(v.discipline) }}</span>
+                  <span class="week__vol-code">{{ label(v.discipline) }}</span>
                   {{ volumeText(v) }}
                 </span>
               }
@@ -129,7 +129,7 @@
                     class="workout"
                     (click)="openEditWorkout(week.id, di, w)"
                   >
-                    <span class="workout__tag">{{ code(w.discipline) }}</span>
+                    <span class="workout__tag">{{ label(w.discipline) }}</span>
                     @if (w.distanceKm) {
                       <span class="workout__dist">{{ dist(w) }}</span>
                     }

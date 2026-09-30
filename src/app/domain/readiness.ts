@@ -28,6 +28,13 @@ export interface FitnessInput {
   ctlTrend: number;
 }
 
+export interface WeeklyStep {
+  discipline: Discipline;
+  currentKm: number;
+  suggestedKm: number;
+  done: boolean;
+}
+
 export interface Readiness {
   overall: number;
   volumeScore: number;
@@ -41,6 +48,7 @@ export interface Readiness {
   tsb: number | null;
   ctlTrend: number | null;
   fitnessBonus: number;
+  nextWeek: WeeklyStep[];
 }
 
 const FITNESS_BONUS = 4;
@@ -204,6 +212,23 @@ export function computeReadiness(
 
   const hasVolume = disciplines.some((d) => d.weeklyKm > 0 || d.longestKm > 0);
 
+  const ramp = config.fromZero ? 0.045 : 0.07;
+  const nextWeek: WeeklyStep[] = disciplines.map((d) => {
+    const done = d.weeklyKm >= d.targetWeeklyKm;
+    const suggestedKm = done
+      ? d.targetWeeklyKm
+      : Math.min(
+          d.targetWeeklyKm,
+          Math.max(d.weeklyKm * (1 + ramp), d.targetWeeklyKm * 0.1),
+        );
+    return {
+      discipline: d.discipline,
+      currentKm: d.weeklyKm,
+      suggestedKm,
+      done,
+    };
+  });
+
   return {
     overall,
     volumeScore,
@@ -217,5 +242,6 @@ export function computeReadiness(
     tsb,
     ctlTrend,
     fitnessBonus,
+    nextWeek,
   };
 }

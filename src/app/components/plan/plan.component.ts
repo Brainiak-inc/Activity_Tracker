@@ -68,8 +68,8 @@ export class PlanComponent {
     return p ? weekDayLabel(p, weekIndex, dayIndex) : '';
   }
 
-  code(d: Discipline): string {
-    return DISCIPLINE_META[d].code;
+  label(d: Discipline): string {
+    return DISCIPLINE_META[d].label;
   }
 
   dist(w: PlannedWorkout): string {

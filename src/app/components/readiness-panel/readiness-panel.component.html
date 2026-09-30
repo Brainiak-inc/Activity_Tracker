@@ -40,7 +40,6 @@
     @for (d of r.disciplines; track d.discipline) {
       <div class="readiness__disc">
         <div class="readiness__disc-head">
-          <span class="readiness__disc-code">{{ code(d.discipline) }}</span>
           <span class="readiness__disc-name">{{ label(d.discipline) }}</span>
           <span class="readiness__disc-pct" [style.color]="colorFor(d.percent)">
             {{ d.percent }}%
@@ -55,7 +54,7 @@
         </div>
         <div class="readiness__disc-meta">
           <span>
-            об/нед {{ dist(d.discipline, d.weeklyKm) }} /
+            в неделю {{ dist(d.discipline, d.weeklyKm) }} /
             {{ dist(d.discipline, d.targetWeeklyKm) }}
           </span>
           <span>
@@ -66,6 +65,21 @@
       </div>
     }
   </div>
+
+  @if (steps().length > 0) {
+    <div class="readiness__plan">
+      <span class="readiness__plan-tag">На этой неделе</span>
+      @for (s of steps(); track s.discipline) {
+        <div class="readiness__plan-row">
+          <span class="readiness__plan-name">{{ label(s.discipline) }}</span>
+          <span class="readiness__plan-val">
+            {{ dist(s.discipline, s.currentKm) }} →
+            <b>{{ dist(s.discipline, s.suggestedKm) }}</b> в неделю
+          </span>
+        </div>
+      }
+    </div>
+  }
 
   @if (hasFitness()) {
     <div class="readiness__fitness">

@@ -22,7 +22,6 @@ interface TrendMark {
 
 interface VolumeRow {
   discipline: Discipline;
-  code: string;
   label: string;
   lastText: string;
   bars: Bar[];
@@ -58,7 +57,6 @@ export class VolumeTrendComponent {
         : 0;
       rows.push({
         discipline: d,
-        code: DISCIPLINE_META[d].code,
         label: DISCIPLINE_META[d].label,
         lastText: formatDistance(d, last),
         bars,

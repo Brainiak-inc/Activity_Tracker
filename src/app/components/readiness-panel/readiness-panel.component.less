@@ -117,13 +117,6 @@
     font-size: 13px;
   }
 
-  &__disc-code {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: var(--accent);
-  }
-
   &__disc-name {
     color: var(--text);
   }
@@ -150,6 +143,45 @@
     gap: 4px 14px;
     font-size: 11px;
     color: var(--text-muted);
+  }
+
+  &__plan {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  &__plan-tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  &__plan-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  &__plan-name {
+    flex-shrink: 0;
+    min-width: 88px;
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  &__plan-val {
+    color: var(--text-muted);
+
+    b {
+      color: var(--text);
+      font-weight: 700;
+    }
   }
 
   &__fitness {

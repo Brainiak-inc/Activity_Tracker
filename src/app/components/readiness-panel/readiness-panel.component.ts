@@ -12,6 +12,14 @@ function pluralMonths(m: number): string {
   return 'месяцев';
 }
 
+function pluralWeeks(n: number): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return 'неделю';
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return 'недели';
+  return 'недель';
+}
+
 @Component({
   selector: 'app-readiness-panel',
   standalone: true,
@@ -35,7 +43,7 @@ export class ReadinessPanelComponent {
     if (m <= 0) return 'Объёмы на целевом уровне';
     if (m >= 12) {
       const years = (m / 12).toFixed(1).replace('.', ',');
-      return `≈ ${m} ${pluralMonths(m)} · ~${years} г`;
+      return `≈ ${m} ${pluralMonths(m)} · ~${years} года`;
     }
     return `≈ ${m} ${pluralMonths(m)}`;
   });
@@ -49,11 +57,15 @@ export class ReadinessPanelComponent {
       1,
       Math.round(r.monthsToReady * 4.345 - (r.weeksToRace ?? 0)),
     );
-    return `Отстаёшь ~${behind} нед`;
+    return `Отстаёшь ~${behind} ${pluralWeeks(behind)}`;
   });
 
   readonly statusColor = computed(() =>
     this.readiness().status === 'behind' ? 'var(--warn)' : 'var(--ok)',
+  );
+
+  readonly steps = computed(() =>
+    this.readiness().nextWeek.filter((s) => !s.done),
   );
 
   readonly hasFitness = computed(() => this.readiness().ctl !== null);
@@ -94,10 +106,6 @@ export class ReadinessPanelComponent {
     }
     return 'Фитнес стабилен — оценка по объёму без поправки';
   });
-
-  code(d: Discipline): string {
-    return DISCIPLINE_META[d].code;
-  }
 
   label(d: Discipline): string {
     return DISCIPLINE_META[d].label;
