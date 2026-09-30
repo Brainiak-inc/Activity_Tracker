@@ -10,6 +10,7 @@ export class BackupService {
     'adherence_v1',
     'plan_v1',
     'race_config_v1',
+    'deleted_v1',
   ];
 
   export(): void {

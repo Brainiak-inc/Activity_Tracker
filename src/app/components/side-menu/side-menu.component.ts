@@ -1,4 +1,5 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   DISCIPLINE_META,
   IRONMAN_DISCIPLINES,
@@ -19,7 +20,14 @@ interface TrackOption {
   styleUrl: './side-menu.component.less',
 })
 export class SideMenuComponent {
+  private readonly router = inject(Router);
+
   close = output<void>();
+
+  openActivities(): void {
+    this.router.navigate(['/activities']);
+    this.close.emit();
+  }
 
   readonly tracks: TrackOption[] = [
     { key: 'general', label: 'Общая' },

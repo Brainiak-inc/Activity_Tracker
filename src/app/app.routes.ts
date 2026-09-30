@@ -62,6 +62,14 @@ export const routes: Routes = [
       import('./components/plan/plan.component').then((m) => m.PlanComponent),
   },
   {
+    path: 'activities',
+    data: { label: 'Тренировки', context: 'Данные' },
+    loadComponent: () =>
+      import('./components/activities-page/activities-page.component').then(
+        (m) => m.ActivitiesPageComponent,
+      ),
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: () => (inject(DashboardService).hasData() ? 'overview' : 'plan'),

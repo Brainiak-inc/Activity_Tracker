@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Activity } from '../../domain/activity';
 import { DISCIPLINE_META } from '../../domain/discipline';
 import {
@@ -16,6 +16,8 @@ import {
 export class ActivityListComponent {
   activities = input.required<Activity[]>();
   showTag = input<boolean>(true);
+  editable = input<boolean>(false);
+  select = output<Activity>();
 
   code(activity: Activity): string {
     return DISCIPLINE_META[activity.discipline].code;

@@ -1,0 +1,35 @@
+<app-modal title="Тренировка" (close)="cancel.emit()">
+  <div class="form">
+    @if (activity().title) {
+      <p class="form__text">{{ activity().title }}</p>
+    }
+    <p class="form__text">{{ activity().garminType }} · {{ when() }}</p>
+
+    <label class="form__label">Дисциплина</label>
+    <div class="form__disc">
+      @for (d of disciplines; track d.key) {
+        <button
+          type="button"
+          class="form__disc-btn"
+          [class.form__disc-btn--active]="discipline() === d.key"
+          (click)="discipline.set(d.key)"
+        >
+          <span class="form__disc-label">{{ d.label }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="form__actions">
+      <button
+        type="button"
+        class="btn btn--danger form__del"
+        (click)="remove.emit()"
+      >
+        Удалить
+      </button>
+      <button type="button" class="btn btn--primary" (click)="onSave()">
+        Сохранить
+      </button>
+    </div>
+  </div>
+</app-modal>
