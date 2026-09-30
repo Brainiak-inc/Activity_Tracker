@@ -20,6 +20,23 @@ export function formatClock(totalSeconds: number): string {
   return `${h}:${`${m}`.padStart(2, '0')}`;
 }
 
+function minSec(totalSeconds: number): string {
+  const m = Math.floor(totalSeconds / 60);
+  const s = Math.round(totalSeconds % 60);
+  return `${m}:${`${s}`.padStart(2, '0')}`;
+}
+
+export function formatPace(discipline: Discipline, speedKmh: number): string {
+  if (speedKmh <= 0) return '—';
+  if (discipline === Discipline.Swim) {
+    return `${minSec(360 / speedKmh)}/100м`;
+  }
+  if (discipline === Discipline.Bike) {
+    return `${speedKmh.toFixed(1)} км/ч`;
+  }
+  return `${minSec(3600 / speedKmh)}/км`;
+}
+
 export function formatDate(d: Date): string {
   return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 }

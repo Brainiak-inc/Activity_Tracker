@@ -81,6 +81,28 @@
     </div>
   }
 
+  @if (pace().length > 0) {
+    <div class="readiness__pace">
+      <span class="readiness__pace-tag">Темп к финишу</span>
+      @for (p of pace(); track p.discipline) {
+        <div class="readiness__pace-row">
+          <span class="readiness__pace-name">{{ label(p.discipline) }}</span>
+          @if (p.hasData) {
+            <span
+              class="readiness__pace-val"
+              [style.color]="p.ok ? 'var(--ok)' : 'var(--fatigue)'"
+            >{{ paceText(p.discipline, p.currentSpeed!) }} {{ p.ok ? '✓' : '✗' }}</span>
+            <span class="readiness__pace-req">
+              нужно {{ paceText(p.discipline, p.requiredSpeed) }}
+            </span>
+          } @else {
+            <span class="readiness__pace-req">нет данных</span>
+          }
+        </div>
+      }
+    </div>
+  }
+
   @if (hasFitness()) {
     <div class="readiness__fitness">
       <span class="readiness__fitness-tag">ФОРМА</span>

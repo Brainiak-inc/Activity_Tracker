@@ -1,6 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
 import { DISCIPLINE_META, Discipline } from '../../domain/discipline';
-import { formatClock, formatDistance } from '../../domain/format';
+import { formatClock, formatDistance, formatPace } from '../../domain/format';
 import { tsbStatus } from '../../domain/form-status';
 import { RACE_LABEL, RaceConfig, Readiness } from '../../domain/readiness';
 
@@ -68,6 +68,8 @@ export class ReadinessPanelComponent {
     this.readiness().nextWeek.filter((s) => !s.done),
   );
 
+  readonly pace = computed(() => this.readiness().pace);
+
   readonly hasFitness = computed(() => this.readiness().ctl !== null);
 
   readonly trend = computed(() => {
@@ -113,6 +115,10 @@ export class ReadinessPanelComponent {
 
   dist(d: Discipline, km: number): string {
     return formatDistance(d, km);
+  }
+
+  paceText(d: Discipline, speed: number): string {
+    return formatPace(d, speed);
   }
 
   colorFor(percent: number): string {

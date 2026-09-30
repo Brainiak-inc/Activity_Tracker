@@ -35,6 +35,14 @@ export interface WeeklyStep {
   done: boolean;
 }
 
+export interface PaceCheck {
+  discipline: Discipline;
+  currentSpeed: number | null;
+  requiredSpeed: number;
+  ok: boolean;
+  hasData: boolean;
+}
+
 export interface Readiness {
   overall: number;
   volumeScore: number;
@@ -49,6 +57,7 @@ export interface Readiness {
   ctlTrend: number | null;
   fitnessBonus: number;
   nextWeek: WeeklyStep[];
+  pace: PaceCheck[];
 }
 
 const FITNESS_BONUS = 4;
@@ -81,6 +90,30 @@ export const RACE_CUTOFF_SECONDS: Record<RaceDistance, number> = {
   half: 8.5 * 3600,
 };
 
+const RACE_LEG_KM: Record<RaceDistance, Record<string, number>> = {
+  full: {
+    [Discipline.Swim]: 3.8,
+    [Discipline.Bike]: 180,
+    [Discipline.Run]: 42.2,
+  },
+  half: {
+    [Discipline.Swim]: 1.9,
+    [Discipline.Bike]: 90,
+    [Discipline.Run]: 21.1,
+  },
+};
+
+const LEG_FRACTION: Record<string, number> = {
+  [Discipline.Swim]: 0.14,
+  [Discipline.Bike]: 0.47,
+  [Discipline.Run]: 0.39,
+};
+
+const TRANSITION_SECONDS: Record<RaceDistance, number> = {
+  full: 12 * 60,
+  half: 8 * 60,
+};
+
 const WEEK_MS = 7 * 24 * 3600 * 1000;
 
 function weeklyVolume(
@@ -97,6 +130,26 @@ function weeklyVolume(
     sum += a.distanceKm ?? 0;
   }
   return sum / weeks;
+}
+
+function avgSpeed(
+  activities: Activity[],
+  discipline: Discipline,
+  now: number,
+  weeks: number,
+): number | null {
+  const cutoff = now - weeks * WEEK_MS;
+  let km = 0;
+  let hours = 0;
+  for (const a of activities) {
+    if (a.discipline !== discipline) continue;
+    if (a.distanceKm == null || a.distanceKm <= 0) continue;
+    if (a.durationMs <= 0) continue;
+    if (a.start.getTime() < cutoff) continue;
+    km += a.distanceKm;
+    hours += a.durationMs / 3_600_000;
+  }
+  return hours > 0 ? km / hours : null;
 }
 
 function longestSession(
@@ -212,6 +265,24 @@ export function computeReadiness(
 
   const hasVolume = disciplines.some((d) => d.weeklyKm > 0 || d.longestKm > 0);
 
+  const movingSeconds = Math.max(
+    1,
+    config.targetSeconds - TRANSITION_SECONDS[config.distance],
+  );
+  const pace: PaceCheck[] = IRONMAN_DISCIPLINES.map((d) => {
+    const legKm = RACE_LEG_KM[config.distance][d];
+    const legHours = (movingSeconds * LEG_FRACTION[d]) / 3600;
+    const requiredSpeed = legKm / legHours;
+    const currentSpeed = avgSpeed(activities, d, now, 12);
+    return {
+      discipline: d,
+      currentSpeed,
+      requiredSpeed,
+      hasData: currentSpeed !== null,
+      ok: currentSpeed !== null && currentSpeed >= requiredSpeed * 0.98,
+    };
+  });
+
   const ramp = config.fromZero ? 0.045 : 0.07;
   const nextWeek: WeeklyStep[] = disciplines.map((d) => {
     const done = d.weeklyKm >= d.targetWeeklyKm;
@@ -243,5 +314,6 @@ export function computeReadiness(
     ctlTrend,
     fitnessBonus,
     nextWeek,
+    pace,
   };
 }

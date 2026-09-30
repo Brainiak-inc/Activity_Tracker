@@ -184,6 +184,44 @@
     }
   }
 
+  &__pace {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  &__pace-tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  &__pace-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  &__pace-name {
+    flex-shrink: 0;
+    min-width: 88px;
+    color: var(--text);
+  }
+
+  &__pace-val {
+    font-weight: 700;
+  }
+
+  &__pace-req {
+    margin-left: auto;
+    color: var(--text-muted);
+  }
+
   &__fitness {
     display: flex;
     flex-wrap: wrap;
