@@ -13,9 +13,21 @@
       }
     </div>
 
+    <label class="form__label">Дистанция, {{ unit() }}</label>
     <input
       class="form__input"
-      placeholder="Название"
+      type="number"
+      inputmode="decimal"
+      min="0"
+      step="any"
+      placeholder="0"
+      [value]="distance() ?? ''"
+      (input)="onDistance($event)"
+    />
+
+    <input
+      class="form__input"
+      placeholder="Название (необязательно)"
       [value]="title()"
       (input)="onTitle($event)"
     />
@@ -38,12 +50,7 @@
           Удалить
         </button>
       }
-      <button
-        type="button"
-        class="btn btn--primary"
-        [disabled]="!title().trim()"
-        (click)="onSave()"
-      >
+      <button type="button" class="btn btn--primary" (click)="onSave()">
         Сохранить
       </button>
     </div>

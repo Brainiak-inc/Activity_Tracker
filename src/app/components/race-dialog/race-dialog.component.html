@@ -1,0 +1,73 @@
+<app-modal
+  [title]="isEdit() ? 'Настройки гонки' : 'Готовность к Ironman'"
+  (close)="cancel.emit()"
+>
+  <div class="form">
+    <label class="form__label">Дистанция</label>
+    <div class="form__seg">
+      @for (d of distances; track d.key) {
+        <button
+          type="button"
+          class="form__seg-btn"
+          [class.form__seg-btn--active]="distance() === d.key"
+          (click)="selectDistance(d.key)"
+        >
+          {{ d.label }}
+        </button>
+      }
+    </div>
+
+    <label class="form__check">
+      <input type="checkbox" [checked]="noDate()" (change)="toggleNoDate($event)" />
+      <span>Дата ещё не выбрана</span>
+    </label>
+
+    @if (!noDate()) {
+      <label class="form__label">Дата гонки</label>
+      <input
+        type="date"
+        class="form__input"
+        [value]="date()"
+        (input)="onDate($event)"
+      />
+    }
+
+    <label class="form__label">Целевое время финиша</label>
+    <input
+      type="time"
+      class="form__input"
+      [value]="time()"
+      (input)="onTime($event)"
+    />
+
+    <label class="form__label">Часов в неделю (необязательно)</label>
+    <input
+      class="form__input"
+      type="number"
+      inputmode="decimal"
+      min="0"
+      step="any"
+      placeholder="напр. 8"
+      [value]="weeklyHours() ?? ''"
+      (input)="onWeeklyHours($event)"
+    />
+
+    <label class="form__check">
+      <input
+        type="checkbox"
+        [checked]="fromZero()"
+        (change)="toggleFromZero($event)"
+      />
+      <span>Стартую с нуля</span>
+    </label>
+
+    <div class="form__actions">
+      <button type="button" class="btn btn--ghost" (click)="cancel.emit()">
+        Отмена
+      </button>
+      <button type="button" class="btn btn--primary" (click)="onSave()">
+        Сохранить
+      </button>
+    </div>
+  </div>
+</app-modal>

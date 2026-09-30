@@ -33,6 +33,17 @@
       <span class="side-menu__legend-item"><i class="side-menu__chip side-menu__chip--missed"></i>пропущено</span>
     </div>
 
+    <div class="side-menu__section">
+      <h3 class="side-menu__subtitle">Тренировки</h3>
+      <button
+        type="button"
+        class="side-menu__manage"
+        (click)="openActivities()"
+      >
+        Управление тренировками
+      </button>
+    </div>
+
     <h3 class="side-menu__subtitle">Данные</h3>
     <app-data-controls />
   </div>

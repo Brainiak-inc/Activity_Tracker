@@ -25,6 +25,7 @@ export class DashboardService {
   private readonly _settings = signal<AthleteSettings>(DEFAULT_SETTINGS);
   private readonly _lastImportInfo = signal<string | null>(null);
   private lthrManuallySet = false;
+  private deletedKeys = new Set<string>();
 
   readonly activities = this._activities.asReadonly();
   readonly settings = this._settings.asReadonly();
@@ -60,10 +61,11 @@ export class DashboardService {
 
   constructor() {
     const state = this.store.load();
+    this.deletedKeys = new Set(state.deleted);
     this._activities.set(
-      [...state.activities].sort(
-        (a, b) => a.start.getTime() - b.start.getTime(),
-      ),
+      [...state.activities]
+        .filter((a) => !this.deletedKeys.has(dedupKey(a)))
+        .sort((a, b) => a.start.getTime() - b.start.getTime()),
     );
     this._settings.set(state.settings);
     this.lthrManuallySet = state.lthrManuallySet;
@@ -110,7 +112,13 @@ export class DashboardService {
     let added = 0;
     for (const a of result.activities) {
       const key = dedupKey(a);
-      if (!byKey.has(key)) added++;
+      if (this.deletedKeys.has(key)) continue;
+      const existing = byKey.get(key);
+      if (existing) {
+        a.discipline = existing.discipline;
+      } else {
+        added++;
+      }
       byKey.set(key, a);
     }
 
@@ -142,9 +150,25 @@ export class DashboardService {
     this.persist();
   }
 
+  deleteActivity(activity: Activity): void {
+    const key = dedupKey(activity);
+    this.deletedKeys.add(key);
+    this._activities.update((list) => list.filter((a) => dedupKey(a) !== key));
+    this.persist();
+  }
+
+  setDiscipline(activity: Activity, discipline: Discipline): void {
+    const key = dedupKey(activity);
+    this._activities.update((list) =>
+      list.map((a) => (dedupKey(a) === key ? { ...a, discipline } : a)),
+    );
+    this.persist();
+  }
+
   clear(): void {
     this._activities.set([]);
     this._lastImportInfo.set(null);
+    this.deletedKeys.clear();
     this.persist();
   }
 
@@ -153,6 +177,7 @@ export class DashboardService {
       activities: this._activities(),
       settings: this._settings(),
       lthrManuallySet: this.lthrManuallySet,
+      deleted: [...this.deletedKeys],
     });
   }
 }

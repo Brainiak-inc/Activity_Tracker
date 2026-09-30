@@ -105,4 +105,28 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__manage {
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--accent);
+    }
+  }
 }

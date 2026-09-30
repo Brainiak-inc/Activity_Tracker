@@ -1,0 +1,22 @@
+<button type="button" class="back" (click)="back()">← Назад</button>
+
+<h2 class="apage__h">Все тренировки</h2>
+<p class="apage__hint">
+  Тап по тренировке — сменить дисциплину (чинит «Другое») или удалить. Правки
+  сохраняются и переживают повторный импорт.
+</p>
+
+<app-activity-list
+  [activities]="all()"
+  [editable]="true"
+  (select)="editing.set($event)"
+/>
+
+@if (editing(); as a) {
+  <app-activity-edit-dialog
+    [activity]="a"
+    (save)="onSave($event)"
+    (remove)="onRemove()"
+    (cancel)="editing.set(null)"
+  />
+}

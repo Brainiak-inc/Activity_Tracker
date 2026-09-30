@@ -1,0 +1,9 @@
+<button type="button" class="back" (click)="back()">← Назад</button>
+
+@if (hasData()) {
+  <app-volume-trend />
+} @else {
+  <div class="vpage__empty panel">
+    Нет данных об объёме. Загрузи тренировки из Garmin (⇪ Импорт вверху).
+  </div>
+}

@@ -1,18 +1,54 @@
-<div class="overview">
-  <h2 class="overview__heading">Динамика формы</h2>
-  <app-fitness-chart [series]="series()" />
-
-  <h2 class="overview__heading">Дисциплины</h2>
-  <div class="overview__disciplines">
-    @for (d of disciplines(); track d.key) {
-      <div class="discipline-mini panel">
-        <div class="discipline-mini__label">{{ d.label }}</div>
-        <div class="discipline-mini__count">{{ d.count }}</div>
-        <div class="discipline-mini__ctl">CTL {{ d.ctl }}</div>
+@if (hasData()) {
+  <div class="overview">
+    <a class="ocard" routerLink="/readiness">
+      <div class="ocard__body">
+        <div class="ocard__lbl">Готовность к Ironman</div>
+        @if (readiness(); as r) {
+          <div class="ocard__big" [style.color]="colorFor(r.overall)">
+            {{ r.overall }}%
+          </div>
+          <div class="ocard__sub">слабое звено — {{ limitingLabel() }}</div>
+        } @else {
+          <div class="ocard__big ocard__big--muted">—</div>
+          <div class="ocard__sub">определить готовность</div>
+        }
       </div>
-    }
-  </div>
+      <span class="ocard__go">→</span>
+    </a>
 
-  <h2 class="overview__heading">Последние тренировки</h2>
-  <app-activity-list [activities]="recent()" />
-</div>
+    <a class="ocard" routerLink="/form">
+      <div class="ocard__body">
+        <div class="ocard__lbl">Форма</div>
+        <div class="ocard__big">
+          CTL {{ round(form()?.ctl ?? 0) }}
+          <span class="ocard__tr" [style.color]="ctlTrend().color">{{ ctlTrend().arrow }}</span>
+        </div>
+        <div class="ocard__sub">
+          свежесть {{ tsbText() }}@if (tsbStat(); as t) { · {{ t.label }}}
+        </div>
+      </div>
+      <span class="ocard__go">→</span>
+    </a>
+
+    <a class="ocard" routerLink="/volume">
+      <div class="ocard__body">
+        <div class="ocard__lbl">Объём за неделю</div>
+        <div class="ocard__big">
+          {{ round(weekVolume().last) }} <span class="ocard__unit">км</span>
+          <span class="ocard__tr" [style.color]="weekVolume().trend.color">{{ weekVolume().trend.arrow }}</span>
+        </div>
+        <div class="ocard__sub">плавание, велосипед, бег суммарно</div>
+      </div>
+      <span class="ocard__go">→</span>
+    </a>
+
+    <h2 class="overview__heading">Последние тренировки</h2>
+    <app-activity-list [activities]="recent()" />
+  </div>
+} @else {
+  <div class="overview__empty panel">
+    Нет данных для аналитики.<br />
+    Нажми <span class="overview__accent">⇪ Импорт</span> вверху и загрузи
+    CSV-экспорт из Garmin — построим графики формы и статистику.
+  </div>
+}

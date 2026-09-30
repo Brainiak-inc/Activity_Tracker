@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fpage {
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+  }
+
+  &__h {
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+
+  &__empty {
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+}

@@ -34,7 +34,7 @@
       <div class="plan__meta">
         <span class="plan__meta-info">
           {{ plan.startMonday ? 'С датами' : 'Без дат' }} ·
-          {{ plan.weeks.length }} нед.
+          {{ weeksText(plan.weeks.length) }}
         </span>
         <button
           type="button"
@@ -47,6 +47,8 @@
 
       @for (week of plan.weeks; track week.id; let wi = $index) {
         @let p = progress(week);
+        @let vol = volume(week);
+        @let cmp = comparison(wi, week);
         <section class="week" [class.week--done]="p.complete">
           <header class="week__head">
             <span class="week__range">{{ weekLabel(wi) }}</span>
@@ -77,6 +79,33 @@
             </div>
           </header>
 
+          @if (cmp && cmp.length > 0) {
+            <div class="week__cmp">
+              @for (c of cmp; track c.discipline) {
+                <div class="week__cmp-row">
+                  <span class="week__cmp-code">{{ label(c.discipline) }}</span>
+                  <div class="week__cmp-bar">
+                    <span
+                      class="week__cmp-fill"
+                      [style.width.%]="cmpPercent(c)"
+                      [style.background]="cmpColor(c)"
+                    ></span>
+                  </div>
+                  <span class="week__cmp-val">{{ cmpText(c) }}</span>
+                </div>
+              }
+            </div>
+          } @else if (vol.length > 0) {
+            <div class="week__volume">
+              @for (v of vol; track v.discipline) {
+                <span class="week__vol">
+                  <span class="week__vol-code">{{ label(v.discipline) }}</span>
+                  {{ volumeText(v) }}
+                </span>
+              }
+            </div>
+          }
+
           @for (day of week.days; track $index; let di = $index) {
             <div class="week__day" [class.week__day--done]="week.done[di]">
               @if (day.length > 0) {
@@ -100,8 +129,13 @@
                     class="workout"
                     (click)="openEditWorkout(week.id, di, w)"
                   >
-                    <span class="workout__tag">{{ code(w.discipline) }}</span>
-                    <span class="workout__title">{{ w.title }}</span>
+                    <span class="workout__tag">{{ label(w.discipline) }}</span>
+                    @if (w.distanceKm) {
+                      <span class="workout__dist">{{ dist(w) }}</span>
+                    }
+                    @if (w.title) {
+                      <span class="workout__title">{{ w.title }}</span>
+                    }
                   </button>
                 }
                 <button

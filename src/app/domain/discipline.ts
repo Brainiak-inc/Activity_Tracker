@@ -8,15 +8,14 @@ export enum Discipline {
 
 export interface DisciplineMeta {
   label: string;
-  code: string;
 }
 
 export const DISCIPLINE_META: Record<Discipline, DisciplineMeta> = {
-  [Discipline.Run]: { label: 'Бег', code: 'БЕГ' },
-  [Discipline.Bike]: { label: 'Велосипед', code: 'ВЕЛ' },
-  [Discipline.Swim]: { label: 'Плавание', code: 'ПЛВ' },
-  [Discipline.Strength]: { label: 'Силовая', code: 'СИЛ' },
-  [Discipline.Other]: { label: 'Другое', code: 'ПРЧ' },
+  [Discipline.Run]: { label: 'Бег' },
+  [Discipline.Bike]: { label: 'Велосипед' },
+  [Discipline.Swim]: { label: 'Плавание' },
+  [Discipline.Strength]: { label: 'Силовая' },
+  [Discipline.Other]: { label: 'Другое' },
 };
 
 export const IRONMAN_DISCIPLINES: Discipline[] = [

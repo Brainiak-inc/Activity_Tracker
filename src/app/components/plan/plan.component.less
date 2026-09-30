@@ -154,6 +154,66 @@
     gap: 12px;
   }
 
+  &__volume {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 8px 0 4px;
+  }
+
+  &__vol {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  &__vol-code {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+
+  &__cmp {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 0 4px;
+  }
+
+  &__cmp-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__cmp-code {
+    flex-shrink: 0;
+    min-width: 74px;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  &__cmp-bar {
+    flex-shrink: 0;
+    width: 56px;
+    height: 5px;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+
+  &__cmp-fill {
+    display: block;
+    height: 100%;
+  }
+
+  &__cmp-val {
+    font-size: 11px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
   &__badge {
     font-size: 9px;
     font-weight: 700;
@@ -285,20 +345,24 @@
   max-width: 100%;
   border: 1px solid var(--border);
   background: var(--surface-2);
-  border-radius: 10px;
+  border-radius: 2px;
   padding: 6px 10px;
   color: var(--text);
   font-size: 13px;
   cursor: pointer;
 
   &__tag {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.06em;
     color: var(--accent);
   }
 
+  &__dist {
+    font-weight: 600;
+  }
+
   &__title {
+    color: var(--text-muted);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

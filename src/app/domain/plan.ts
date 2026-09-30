@@ -1,14 +1,26 @@
-import { startOfDay } from './activity';
-import { Discipline } from './discipline';
+import { Activity, startOfDay } from './activity';
+import { Discipline, IRONMAN_DISCIPLINES } from './discipline';
 
 export interface PlannedWorkout {
   id: string;
   discipline: Discipline;
   title: string;
   note: string;
+  distanceKm: number | null;
 }
 
 export type WorkoutInput = Omit<PlannedWorkout, 'id'>;
+
+export interface DisciplineVolume {
+  discipline: Discipline;
+  km: number;
+}
+
+export interface VolumeCompare {
+  discipline: Discipline;
+  planned: number;
+  actual: number;
+}
 
 export interface PlanWeek {
   id: string;
@@ -56,9 +68,61 @@ export function weekProgress(week: PlanWeek): WeekProgress {
   return { done, total, complete: total > 0 && done === total };
 }
 
+export function weekVolume(week: PlanWeek): DisciplineVolume[] {
+  const totals = new Map<Discipline, number>();
+  week.days.forEach((day) => {
+    day.forEach((w) => {
+      if (w.distanceKm == null) return;
+      if (!IRONMAN_DISCIPLINES.includes(w.discipline)) return;
+      totals.set(w.discipline, (totals.get(w.discipline) ?? 0) + w.distanceKm);
+    });
+  });
+  return IRONMAN_DISCIPLINES.filter((d) => totals.has(d)).map((d) => ({
+    discipline: d,
+    km: totals.get(d) ?? 0,
+  }));
+}
+
 function dateFromStart(startMonday: string, offset: number): Date {
   const [y, m, d] = startMonday.split('-').map(Number);
   return new Date(y, m - 1, d + offset);
+}
+
+export function weekStartDate(
+  plan: TrainingPlan,
+  weekIndex: number,
+): Date | null {
+  if (!plan.startMonday) return null;
+  return dateFromStart(plan.startMonday, weekIndex * 7);
+}
+
+export function weekComparison(
+  week: PlanWeek,
+  activities: Activity[],
+  start: Date,
+  end: Date,
+): VolumeCompare[] {
+  const planned = new Map<Discipline, number>();
+  for (const v of weekVolume(week)) planned.set(v.discipline, v.km);
+
+  const actual = new Map<Discipline, number>();
+  const from = start.getTime();
+  const to = end.getTime();
+  for (const a of activities) {
+    if (a.distanceKm == null) continue;
+    if (!IRONMAN_DISCIPLINES.includes(a.discipline)) continue;
+    const t = a.start.getTime();
+    if (t < from || t >= to) continue;
+    actual.set(a.discipline, (actual.get(a.discipline) ?? 0) + a.distanceKm);
+  }
+
+  return IRONMAN_DISCIPLINES.filter(
+    (d) => planned.has(d) || actual.has(d),
+  ).map((d) => ({
+    discipline: d,
+    planned: planned.get(d) ?? 0,
+    actual: actual.get(d) ?? 0,
+  }));
 }
 
 export function weekDayLabel(

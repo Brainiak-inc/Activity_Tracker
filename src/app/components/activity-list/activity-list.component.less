@@ -19,15 +19,36 @@
     }
   }
 
+  &__item--editable {
+    width: 100%;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    color: inherit;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  &__edit {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  &__item--editable:hover &__edit {
+    color: var(--accent);
+  }
+
   &__tag {
     flex-shrink: 0;
     align-self: center;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.08em;
     color: var(--accent);
     border: 1px solid var(--border);
-    padding: 3px 5px;
+    padding: 3px 8px;
   }
 
   &__body {

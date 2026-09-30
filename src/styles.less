@@ -139,6 +139,29 @@ button {
     resize: vertical;
   }
 
+  &__seg {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  &__seg-btn {
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &--active {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+  }
+
   &__disc {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -179,6 +202,19 @@ button {
   &__del {
     margin-right: auto;
   }
+}
+
+.back {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0 0 2px;
+  cursor: pointer;
 }
 
 .btn {

@@ -30,7 +30,9 @@ export function activityFromJson(json: Record<string, unknown>): Activity {
   const garminType = json['garminType'] as string;
   return {
     start: new Date(json['start'] as string),
-    discipline: disciplineFromGarminType(garminType),
+    discipline:
+      (json['discipline'] as Discipline | undefined) ??
+      disciplineFromGarminType(garminType),
     garminType,
     title: json['title'] as string,
     durationMs: json['durationMs'] as number,
@@ -44,6 +46,7 @@ export function activityFromJson(json: Record<string, unknown>): Activity {
 export function activityToJson(a: Activity): Record<string, unknown> {
   return {
     start: a.start.toISOString(),
+    discipline: a.discipline,
     garminType: a.garminType,
     title: a.title,
     durationMs: a.durationMs,

@@ -1,14 +1,31 @@
 <div class="activity-list">
   @for (activity of activities(); track activity.start.getTime() + activity.garminType) {
-    <div class="activity-list__item">
-      @if (showTag()) {
-        <div class="activity-list__tag">{{ code(activity) }}</div>
-      }
-      <div class="activity-list__body">
-        <div class="activity-list__title">{{ activity.title }}</div>
-        <div class="activity-list__meta">{{ subtitle(activity) }}</div>
+    @if (editable()) {
+      <button
+        type="button"
+        class="activity-list__item activity-list__item--editable"
+        (click)="select.emit(activity)"
+      >
+        @if (showTag()) {
+          <div class="activity-list__tag">{{ label(activity) }}</div>
+        }
+        <div class="activity-list__body">
+          <div class="activity-list__title">{{ activity.title }}</div>
+          <div class="activity-list__meta">{{ subtitle(activity) }}</div>
+        </div>
+        <span class="activity-list__edit">✎</span>
+      </button>
+    } @else {
+      <div class="activity-list__item">
+        @if (showTag()) {
+          <div class="activity-list__tag">{{ label(activity) }}</div>
+        }
+        <div class="activity-list__body">
+          <div class="activity-list__title">{{ activity.title }}</div>
+          <div class="activity-list__meta">{{ subtitle(activity) }}</div>
+        </div>
       </div>
-    </div>
+    }
   } @empty {
     <div class="activity-list__empty">Нет тренировок</div>
   }

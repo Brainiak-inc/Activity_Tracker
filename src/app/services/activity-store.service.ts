@@ -10,6 +10,7 @@ export interface PersistedState {
   activities: Activity[];
   settings: AthleteSettings;
   lthrManuallySet: boolean;
+  deleted: string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -17,6 +18,7 @@ export class ActivityStore {
   private readonly kActivities = 'activities_v1';
   private readonly kSettings = 'settings_v1';
   private readonly kLthrManual = 'lthr_manual_v1';
+  private readonly kDeleted = 'deleted_v1';
 
   load(): PersistedState {
     const acts =
@@ -27,6 +29,7 @@ export class ActivityStore {
       activities: acts.map(activityFromJson),
       settings,
       lthrManuallySet: localStorage.getItem(this.kLthrManual) === 'true',
+      deleted: this.readJson<string[]>(this.kDeleted) ?? [],
     };
   }
 
@@ -37,6 +40,7 @@ export class ActivityStore {
     );
     localStorage.setItem(this.kSettings, JSON.stringify(state.settings));
     localStorage.setItem(this.kLthrManual, String(state.lthrManuallySet));
+    localStorage.setItem(this.kDeleted, JSON.stringify(state.deleted));
   }
 
   private readJson<T>(key: string): T | null {

@@ -1,14 +1,21 @@
 import { Component, inject, signal } from '@angular/core';
 import { DISCIPLINE_META, Discipline } from '../../domain/discipline';
 import {
+  DisciplineVolume,
   PlanWeek,
   PlannedWorkout,
+  VolumeCompare,
   WeekProgress,
   WorkoutInput,
+  weekComparison,
   weekDayLabel,
   weekLabel,
   weekProgress,
+  weekStartDate,
+  weekVolume,
 } from '../../domain/plan';
+import { formatDistance } from '../../domain/format';
+import { DashboardService } from '../../services/dashboard.service';
 import { PlanService } from '../../services/plan.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import {
@@ -36,6 +43,7 @@ interface WorkoutTarget {
 })
 export class PlanComponent {
   private readonly plan = inject(PlanService);
+  private readonly dashboard = inject(DashboardService);
 
   readonly plans = this.plan.plans;
   readonly activeId = this.plan.activeId;
@@ -60,8 +68,68 @@ export class PlanComponent {
     return p ? weekDayLabel(p, weekIndex, dayIndex) : '';
   }
 
-  code(d: Discipline): string {
-    return DISCIPLINE_META[d].code;
+  label(d: Discipline): string {
+    return DISCIPLINE_META[d].label;
+  }
+
+  weeksText(n: number): string {
+    const m10 = n % 10;
+    const m100 = n % 100;
+    const w =
+      m10 === 1 && m100 !== 11
+        ? 'неделя'
+        : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)
+          ? 'недели'
+          : 'недель';
+    return `${n} ${w}`;
+  }
+
+  dist(w: PlannedWorkout): string {
+    return w.distanceKm != null ? formatDistance(w.discipline, w.distanceKm) : '';
+  }
+
+  volume(week: PlanWeek): DisciplineVolume[] {
+    return weekVolume(week);
+  }
+
+  volumeText(v: DisciplineVolume): string {
+    return formatDistance(v.discipline, v.km);
+  }
+
+  comparison(weekIndex: number, week: PlanWeek): VolumeCompare[] | null {
+    const p = this.activePlan();
+    if (!p) return null;
+    const start = weekStartDate(p, weekIndex);
+    if (!start || start.getTime() > Date.now()) return null;
+    const end = new Date(
+      start.getFullYear(),
+      start.getMonth(),
+      start.getDate() + 7,
+    );
+    const cmp = weekComparison(week, this.dashboard.activities(), start, end);
+    return cmp.some((c) => c.actual > 0) ? cmp : null;
+  }
+
+  cmpPercent(c: VolumeCompare): number {
+    if (c.planned <= 0) return c.actual > 0 ? 100 : 0;
+    return Math.min(100, Math.round((c.actual / c.planned) * 100));
+  }
+
+  cmpText(c: VolumeCompare): string {
+    const actual = formatDistance(c.discipline, c.actual);
+    if (c.planned <= 0) return `${actual} факт (вне плана)`;
+    const planned = formatDistance(c.discipline, c.planned);
+    return `${actual} / ${planned} · ${this.cmpPercent(c)}%`;
+  }
+
+  cmpColor(c: VolumeCompare): string {
+    if (c.planned <= 0) return 'var(--text-muted)';
+    const pct = this.cmpPercent(c);
+    return pct >= 90
+      ? 'var(--ok)'
+      : pct >= 50
+        ? 'var(--form)'
+        : 'var(--fatigue)';
   }
 
   progress(week: PlanWeek): WeekProgress {

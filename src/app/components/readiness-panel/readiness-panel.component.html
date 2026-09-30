@@ -1,0 +1,141 @@
+@let r = readiness();
+
+<section class="readiness panel">
+  <header class="readiness__head">
+    <div>
+      <div class="readiness__title">Готовность к Ironman</div>
+      <div class="readiness__sub">
+        {{ raceLabel() }} · цель {{ targetTime() }}
+      </div>
+    </div>
+    <div class="readiness__tools">
+      <button type="button" class="readiness__tool" (click)="edit.emit()">
+        Изменить
+      </button>
+      <button type="button" class="readiness__tool" (click)="clear.emit()">
+        Убрать
+      </button>
+    </div>
+  </header>
+
+  <div class="readiness__overall">
+    <div class="readiness__pct" [style.color]="colorFor(r.overall)">
+      {{ r.overall }}<span class="readiness__pct-unit">%</span>
+    </div>
+    <div class="readiness__gauge-wrap">
+      <div class="readiness__gauge">
+        <span
+          class="readiness__gauge-fill"
+          [style.width.%]="r.overall"
+          [style.background]="colorFor(r.overall)"
+        ></span>
+      </div>
+      <div class="readiness__limit">
+        Слабое звено: <b>{{ limitingLabel() }}</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="readiness__discs">
+    @for (d of r.disciplines; track d.discipline) {
+      <div class="readiness__disc">
+        <div class="readiness__disc-head">
+          <span class="readiness__disc-name">{{ label(d.discipline) }}</span>
+          <span class="readiness__disc-pct" [style.color]="colorFor(d.percent)">
+            {{ d.percent }}%
+          </span>
+        </div>
+        <div class="readiness__disc-bar">
+          <span
+            class="readiness__disc-fill"
+            [style.width.%]="d.percent"
+            [style.background]="colorFor(d.percent)"
+          ></span>
+        </div>
+        <div class="readiness__disc-meta">
+          <span>
+            в неделю {{ dist(d.discipline, d.weeklyKm) }} /
+            {{ dist(d.discipline, d.targetWeeklyKm) }}
+          </span>
+          <span>
+            длинная {{ dist(d.discipline, d.longestKm) }} /
+            {{ dist(d.discipline, d.targetLongKm) }}
+          </span>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (steps().length > 0) {
+    <div class="readiness__plan">
+      <span class="readiness__plan-tag">На этой неделе</span>
+      @for (s of steps(); track s.discipline) {
+        <div class="readiness__plan-row">
+          <span class="readiness__plan-name">{{ label(s.discipline) }}</span>
+          <span class="readiness__plan-val">
+            {{ dist(s.discipline, s.currentKm) }} →
+            <b>{{ dist(s.discipline, s.suggestedKm) }}</b> в неделю
+          </span>
+        </div>
+      }
+    </div>
+  }
+
+  @if (pace().length > 0) {
+    <div class="readiness__pace">
+      <span class="readiness__pace-tag">Темп к финишу</span>
+      @for (p of pace(); track p.discipline) {
+        <div class="readiness__pace-row">
+          <span class="readiness__pace-name">{{ label(p.discipline) }}</span>
+          @if (p.hasData) {
+            <span
+              class="readiness__pace-val"
+              [style.color]="p.ok ? 'var(--ok)' : 'var(--fatigue)'"
+            >{{ paceText(p.discipline, p.currentSpeed!) }} {{ p.ok ? '✓' : '✗' }}</span>
+            <span class="readiness__pace-req">
+              нужно {{ paceText(p.discipline, p.requiredSpeed) }}
+            </span>
+          } @else {
+            <span class="readiness__pace-req">нет данных</span>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (hasFitness()) {
+    <div class="readiness__fitness">
+      <span class="readiness__fitness-tag">ФОРМА</span>
+      <span class="readiness__fitness-item">
+        CTL {{ r.ctl }}
+        @if (trend(); as t) {
+          <span [style.color]="t.color">{{ t.arrow }}</span>
+        }
+      </span>
+      @if (freshness(); as f) {
+        <span class="readiness__fitness-item">
+          свежесть {{ tsbText() }} ·
+          <span [style.color]="f.color">{{ f.label }}</span>
+        </span>
+      }
+    </div>
+    @if (fitnessNote(); as note) {
+      <div class="readiness__fitness-note">{{ note }}</div>
+    }
+  }
+
+  <div class="readiness__foot">
+    <span class="readiness__eta">{{ etaText() }}</span>
+    @if (statusText(); as st) {
+      <span class="readiness__status" [style.color]="statusColor()">{{ st }}</span>
+    }
+  </div>
+
+  @if (!r.hasVolume) {
+    <div class="readiness__warn">
+      Пока нет объёма для оценки — импортируй тренировки из Garmin.
+    </div>
+  }
+
+  <div class="readiness__note">оценка-ориентир по объёму, не медицинский расчёт</div>
+</section>
