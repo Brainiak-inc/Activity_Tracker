@@ -25,6 +25,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx ng build --base-href=/Activity_Tracker/
+      - run: cp dist/activity-tracker-web/browser/index.html dist/activity-tracker-web/browser/404.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

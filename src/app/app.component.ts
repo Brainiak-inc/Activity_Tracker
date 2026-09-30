@@ -1,23 +1,33 @@
-import { Component, effect, inject, signal } from '@angular/core';
-import { DisciplineComponent } from './components/discipline/discipline.component';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import { filter, map } from 'rxjs';
 import { HudStripComponent } from './components/hud-strip/hud-strip.component';
-import { OverviewComponent } from './components/overview/overview.component';
-import { PlanComponent } from './components/plan/plan.component';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { Discipline } from './domain/discipline';
 import { DashboardService } from './services/dashboard.service';
 import { PlanService } from './services/plan.service';
 
-type TabKey = 'overview' | 'plan' | Discipline;
+interface Tab {
+  path: string;
+  label: string;
+  count?: () => number;
+}
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
     HudStripComponent,
-    OverviewComponent,
-    DisciplineComponent,
-    PlanComponent,
     SideMenuComponent,
   ],
   templateUrl: './app.component.html',
@@ -27,6 +37,7 @@ type TabKey = 'overview' | 'plan' | Discipline;
 export class AppComponent {
   readonly service = inject(DashboardService);
   private readonly planService = inject(PlanService);
+  private readonly router = inject(Router);
 
   readonly menuOpen = signal(false);
 
@@ -36,47 +47,50 @@ export class AppComponent {
     });
   }
 
-  readonly tabs: { key: TabKey; label: string }[] = [
-    { key: 'overview', label: 'Общее' },
-    { key: Discipline.Swim, label: 'Плав' },
-    { key: Discipline.Bike, label: 'Вело' },
-    { key: Discipline.Run, label: 'Бег' },
-    { key: 'plan', label: 'План' },
+  readonly tabs: Tab[] = [
+    {
+      path: '/overview',
+      label: 'Обзор',
+      count: () => this.service.activities().length,
+    },
+    { path: '/readiness', label: 'Готовность' },
+    {
+      path: '/discipline',
+      label: 'Дисциплины',
+      count: () => {
+        const c = this.service.countByDiscipline();
+        return c[Discipline.Swim] + c[Discipline.Bike] + c[Discipline.Run];
+      },
+    },
+    {
+      path: '/plan',
+      label: 'План',
+      count: () => this.planService.plans().length,
+    },
   ];
 
-  readonly activeTab = signal<TabKey>(
-    this.service.hasData() ? 'overview' : 'plan',
+  private readonly meta = toSignal(
+    this.router.events.pipe(
+      filter((e) => e instanceof NavigationEnd),
+      map(() => {
+        let route = this.router.routerState.root;
+        let data: Record<string, unknown> = {};
+        while (route) {
+          data = { ...data, ...route.snapshot.data };
+          route = route.firstChild!;
+        }
+        return data;
+      }),
+    ),
+    { initialValue: {} as Record<string, unknown> },
   );
+
+  readonly screenLabel = computed(() => (this.meta()['label'] as string) ?? '');
+  readonly screenContext = computed(
+    () => (this.meta()['context'] as string) ?? '',
+  );
+
   readonly toast = signal<string | null>(null);
-
-  isOverview(key: TabKey): boolean {
-    return key === 'overview';
-  }
-
-  isPlan(key: TabKey): boolean {
-    return key === 'plan';
-  }
-
-  tabCount(key: TabKey): number {
-    if (key === 'overview') return this.service.activities().length;
-    if (key === 'plan') return this.planService.plans().length;
-    return this.service.countByDiscipline()[key];
-  }
-
-  asDiscipline(key: TabKey): Discipline {
-    return key as Discipline;
-  }
-
-  activeLabel(): string {
-    return this.tabs.find((t) => t.key === this.activeTab())?.label ?? '';
-  }
-
-  screenContext(): string {
-    const key = this.activeTab();
-    if (key === 'overview') return 'Сводка';
-    if (key === 'plan') return 'Планировщик';
-    return 'Аналитика';
-  }
 
   onFile(event: Event): void {
     const input = event.target as HTMLInputElement;

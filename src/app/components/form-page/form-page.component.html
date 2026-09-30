@@ -1,0 +1,32 @@
+<button type="button" class="back" (click)="back()">← Назад</button>
+
+@if (hasData() && form(); as f) {
+  <div class="fpage__cards">
+    <app-metric-card
+      label="Фитнес · CTL"
+      [value]="round(f.ctl)"
+      accent="var(--accent)"
+      hint="Хроническая нагрузка за ~42 дня — накопленный уровень формы. Растёт медленно; устойчивый рост означает прогресс."
+    />
+    <app-metric-card
+      label="Усталость · ATL"
+      [value]="round(f.atl)"
+      accent="var(--fatigue)"
+      hint="Острая нагрузка за ~7 дней — свежая усталость. Быстро реагирует на последние тренировки."
+    />
+    <app-metric-card
+      label="Форма · TSB"
+      [value]="round(f.tsb)"
+      [accent]="tsb()!.color"
+      [sub]="tsb()!.label"
+      hint="Баланс формы = CTL − ATL. Плюс — свежесть, минус — накопленная усталость."
+    />
+  </div>
+
+  <h2 class="fpage__h">Динамика формы</h2>
+  <app-fitness-chart [series]="series()" />
+} @else {
+  <div class="fpage__empty panel">
+    Нет данных о форме. Загрузи тренировки из Garmin (⇪ Импорт вверху).
+  </div>
+}

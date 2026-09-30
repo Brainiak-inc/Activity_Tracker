@@ -5,18 +5,12 @@
 .overview {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 
   &__heading {
     font-size: 15px;
     font-weight: 700;
-    margin-top: 6px;
-  }
-
-  &__disciplines {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--gap);
+    margin-top: 8px;
   }
 
   &__empty {
@@ -34,61 +28,61 @@
     color: var(--accent);
     font-weight: 700;
   }
-
-  &__cta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    border: 1px solid var(--accent);
-    background: var(--surface);
-    color: var(--accent);
-    border-radius: var(--radius);
-    padding: 14px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 0 0 18px -8px var(--accent-glow);
-
-    &:hover {
-      background: var(--surface-2);
-    }
-  }
-
-  &__cta-mark {
-    text-shadow: 0 0 8px var(--accent-glow);
-  }
 }
 
-.discipline-mini {
+.ocard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  text-align: center;
+  padding: 13px 15px;
 
-  &__label {
-    font-size: 12px;
+  &:hover {
+    border-color: var(--accent);
+  }
+
+  &__lbl {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--text-muted);
   }
 
-  &__count {
-    font-size: 24px;
+  &__big {
+    font-size: 22px;
     font-weight: 700;
-    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+    margin-top: 3px;
+
+    &--muted {
+      color: var(--text-muted);
+    }
   }
 
-  &__ctl {
+  &__unit {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  &__tr {
+    font-size: 14px;
+    margin-left: 2px;
+  }
+
+  &__sub {
     font-size: 11px;
-    font-weight: 600;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  &__go {
     color: var(--accent);
+    font-size: 16px;
+    flex-shrink: 0;
   }
 }

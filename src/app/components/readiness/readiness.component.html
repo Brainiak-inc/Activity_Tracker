@@ -1,0 +1,38 @@
+@if (raceConfig(); as cfg) {
+  @if (readiness(); as r) {
+    <app-readiness-panel
+      [readiness]="r"
+      [config]="cfg"
+      (edit)="configuring.set(true)"
+      (clear)="clear()"
+    />
+  }
+} @else {
+  <div class="rd-empty panel">
+    <div class="rd-empty__title">Готовность к Ironman</div>
+    <p class="rd-empty__text">
+      @if (hasData()) {
+        Оценим, насколько ты близок к финишу в пределах катоффа — по объёму
+        импортированных тренировок, со слабым звеном и прогнозом срока.
+      } @else {
+        Сначала загрузи тренировки из Garmin (⇪ Импорт вверху) — оценка
+        считается по фактическому объёму.
+      }
+    </p>
+    <button
+      type="button"
+      class="btn btn--primary"
+      (click)="configuring.set(true)"
+    >
+      Определить готовность
+    </button>
+  </div>
+}
+
+@if (configuring()) {
+  <app-race-dialog
+    [config]="raceConfig()"
+    (save)="onSave($event)"
+    (cancel)="configuring.set(false)"
+  />
+}

@@ -1,0 +1,13 @@
+<div class="subnav">
+  @for (s of subs; track s.path) {
+    <a
+      class="subnav__i"
+      [routerLink]="s.path"
+      routerLinkActive="subnav__i--active"
+    >
+      {{ s.label }}
+    </a>
+  }
+</div>
+
+<router-outlet />

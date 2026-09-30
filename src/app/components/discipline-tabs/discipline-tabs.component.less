@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.subnav {
+  display: flex;
+  gap: 6px;
+
+  &__i {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 9px;
+    border-radius: var(--radius);
+
+    &--active {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+  }
+}
