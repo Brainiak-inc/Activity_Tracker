@@ -72,6 +72,18 @@ export class PlanComponent {
     return DISCIPLINE_META[d].label;
   }
 
+  weeksText(n: number): string {
+    const m10 = n % 10;
+    const m100 = n % 100;
+    const w =
+      m10 === 1 && m100 !== 11
+        ? 'неделя'
+        : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)
+          ? 'недели'
+          : 'недель';
+    return `${n} ${w}`;
+  }
+
   dist(w: PlannedWorkout): string {
     return w.distanceKm != null ? formatDistance(w.discipline, w.distanceKm) : '';
   }

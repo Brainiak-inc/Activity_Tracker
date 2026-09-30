@@ -34,7 +34,7 @@
       <div class="plan__meta">
         <span class="plan__meta-info">
           {{ plan.startMonday ? 'С датами' : 'Без дат' }} ·
-          {{ plan.weeks.length }} нед.
+          {{ weeksText(plan.weeks.length) }}
         </span>
         <button
           type="button"

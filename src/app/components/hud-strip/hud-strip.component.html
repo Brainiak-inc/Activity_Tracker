@@ -23,13 +23,13 @@
     </span>
     <span class="hud__value hud__value--accent">{{ round(ctl()) }}</span>
     @if (trend(); as t) {
-      <span class="hud__sub">{{ t.arrow }} {{ t.delta }} за 7 дн</span>
+      <span class="hud__sub">{{ t.arrow }} {{ t.delta }} за 7 дней</span>
     }
   </div>
 
   <div class="hud__tile panel">
     <span class="hud__label">
-      Нагрузка · 7D
+      Нагрузка · 7 дней
       <app-info-hint hint="Суммарная нагрузка (TSS) за последние 7 дней." />
     </span>
     <span class="hud__value">{{ round(weekly()) }}</span>

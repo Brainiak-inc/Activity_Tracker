@@ -10,8 +10,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 })
 export class DisciplineTabsComponent {
   readonly subs = [
-    { path: 'swim', label: 'Плав' },
-    { path: 'bike', label: 'Вело' },
+    { path: 'swim', label: 'Плавание' },
+    { path: 'bike', label: 'Велосипед' },
     { path: 'run', label: 'Бег' },
   ];
 }
