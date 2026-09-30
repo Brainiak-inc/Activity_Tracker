@@ -23,6 +23,8 @@
     <h2 class="overview__heading">Динамика формы</h2>
     <app-fitness-chart [series]="series()" />
 
+    <app-volume-trend />
+
     <h2 class="overview__heading">Дисциплины</h2>
     <div class="overview__disciplines">
       @for (d of disciplines(); track d.key) {

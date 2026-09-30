@@ -7,6 +7,7 @@ import { ActivityListComponent } from '../activity-list/activity-list.component'
 import { FitnessChartComponent } from '../fitness-chart/fitness-chart.component';
 import { RaceDialogComponent } from '../race-dialog/race-dialog.component';
 import { ReadinessPanelComponent } from '../readiness-panel/readiness-panel.component';
+import { VolumeTrendComponent } from '../volume-trend/volume-trend.component';
 
 @Component({
   selector: 'app-overview',
@@ -16,6 +17,7 @@ import { ReadinessPanelComponent } from '../readiness-panel/readiness-panel.comp
     ActivityListComponent,
     ReadinessPanelComponent,
     RaceDialogComponent,
+    VolumeTrendComponent,
   ],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.less',

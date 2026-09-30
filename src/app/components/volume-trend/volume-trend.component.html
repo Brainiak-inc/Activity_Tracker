@@ -1,0 +1,30 @@
+@if (rows().length > 0) {
+  <h2 class="vtrend__title">Объём по неделям</h2>
+  <div class="vtrend panel">
+    @for (row of rows(); track row.discipline) {
+      <div class="vtrend__row">
+        <div class="vtrend__head">
+          <span class="vtrend__code">{{ row.code }}</span>
+          <span class="vtrend__name">{{ row.label }}</span>
+          <span class="vtrend__last">
+            {{ row.lastText }}
+            @if (row.trend; as t) {
+              <span class="vtrend__trend" [style.color]="t.color">{{ t.arrow }}</span>
+            }
+          </span>
+        </div>
+        <div class="vtrend__bars">
+          @for (b of row.bars; track $index) {
+            <span
+              class="vtrend__bar"
+              [class.vtrend__bar--last]="$index === row.bars.length - 1"
+              [style.height.%]="b.h"
+              [title]="b.label"
+            ></span>
+          }
+        </div>
+      </div>
+    }
+    <div class="vtrend__note">последние {{ rows()[0].bars.length }} завершённых недель</div>
+  </div>
+}
