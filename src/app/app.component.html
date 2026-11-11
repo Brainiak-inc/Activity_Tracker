@@ -17,6 +17,18 @@
     </div>
   </header>
 
+  @if (demoActive()) {
+    <div class="demo-banner">
+      <span class="demo-banner__text">
+        Демонстрационные данные — так приложение выглядит с загруженными
+        тренировками. Нажми <b>⇪ Импорт</b> для своих или «Очистить».
+      </span>
+      <button type="button" class="demo-banner__btn" (click)="clearDemo()">
+        Очистить
+      </button>
+    </div>
+  }
+
   <nav class="nav">
     @for (t of tabs; track t.path) {
       <button

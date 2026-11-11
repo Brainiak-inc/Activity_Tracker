@@ -26,3 +26,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# AI assistants / agents
+/.claude/
+/.cursor/
+/.windsurf/
+/.aider*
+/.continue/
+/.github/copilot-instructions.md
+CLAUDE.md
+AGENTS.md
+.cursorrules
+.clinerules

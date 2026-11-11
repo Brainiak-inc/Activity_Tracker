@@ -91,6 +91,9 @@ export class AppComponent {
   );
 
   readonly toast = signal<string | null>(null);
+  readonly demoActive = signal(
+    localStorage.getItem('demo_active_v1') === 'true',
+  );
 
   onFile(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -100,10 +103,26 @@ export class AppComponent {
     const reader = new FileReader();
     reader.onload = () => {
       this.service.import(String(reader.result));
+      localStorage.removeItem('demo_active_v1');
+      this.demoActive.set(false);
       this.showToast(this.service.lastImportInfo());
       input.value = '';
     };
     reader.readAsText(file);
+  }
+
+  clearDemo(): void {
+    [
+      'activities_v1',
+      'settings_v1',
+      'lthr_manual_v1',
+      'plan_v1',
+      'race_config_v1',
+      'adherence_v1',
+      'deleted_v1',
+      'demo_active_v1',
+    ].forEach((k) => localStorage.removeItem(k));
+    location.reload();
   }
 
   private showToast(msg: string | null): void {
